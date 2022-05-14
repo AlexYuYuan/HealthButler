@@ -1,4 +1,4 @@
-package com.example.health_butler
+package com.example.health_butler.data
 
 class Food(name: String, unit:String, calorie: Int, carbohydrate: Int, protein: Int, fat: Int) {
     private var name: String

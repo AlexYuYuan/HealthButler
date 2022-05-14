@@ -2,6 +2,7 @@ package com.example.health_butler.data
 
 import android.content.ContentValues
 import android.content.Context
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
@@ -12,7 +13,7 @@ import java.util.*
 class DataManagement (context: Context){
 
     private val context = context
-    enum class PERIOD{YEAR, MONTH, THREEMONTH}
+    enum class PERIOD{YEAR, MONTH, THREEMONTH, ALL}
     enum class TYPE{DIET, SPORT, DRINK}
 
     private class DataBaseHelper(
@@ -126,10 +127,33 @@ class DataManagement (context: Context){
     }
 
     //查询所有运动记录
-    fun queryAllSportRecords(): LinkedList<SportRecord>{
+    fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val sportRecords = LinkedList<SportRecord>()
-        val result = dataBase.query("sport_records as sr inner join sport as s", arrayOf("date", "sport_name", "calorie", "time"), "sr.sport_name = s.sport_name", null, null, null, "date")
+        val now = LocalDate.now()
+        val calendar = Calendar.getInstance()
+        calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+        var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
+        var begin = 0
+        var selection: Array<String> = arrayOf()
+        when(model){
+            0 -> {
+                begin = nowUNIX - 31536000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            1 -> {
+                begin = nowUNIX - 2592000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            2 -> {
+                begin = nowUNIX - 7776000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            3 -> {
+                selection = arrayOf("0", "2147483647")
+            }
+        }
+        val result = dataBase.query("sport_records as sr inner join sport as s", arrayOf("date", "sport_name", "calorie", "time"), "sr.sport_name = s.sport_name and date >= ? and date <= ?", selection, null, null, "date")
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast){
@@ -198,18 +222,6 @@ class DataManagement (context: Context){
         dataBase.close()
     }
 
-    //查询所有体脂记录
-    fun queryFatRate(): LinkedList<FatRate>{
-        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val fatRates = LinkedList<FatRate>()
-        val result = dataBase.query("fat_rate", null, null, null, null, null, null)
-        dataBase.close()
-        while (!result.isAfterLast) {
-            fatRates.add(FatRate(result.getInt(0), result.getDouble(1)))
-        }
-        return fatRates
-    }
-
     //按时间段查询体脂记录
     fun queryFatRate(model:Int): LinkedList<FatRate>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
@@ -219,12 +231,25 @@ class DataManagement (context: Context){
         calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
         var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
         var begin = 0
+        var selection: Array<String> = arrayOf()
         when(model){
-            0 -> begin = nowUNIX-31536000
-            1 -> begin = nowUNIX-2592000
-            2 -> begin = nowUNIX-7776000
+            0 -> {
+                begin = nowUNIX - 31536000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            1 -> {
+                begin = nowUNIX - 2592000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            2 -> {
+                begin = nowUNIX - 7776000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            3 -> {
+                selection = arrayOf("0", "2147483647")
+            }
         }
-        val result = dataBase.query("fat_rate", null, "date >= ? and date <= ?", arrayOf(begin.toString(), nowUNIX.toString()), null, null, null)
+        val result = dataBase.query("fat_rate", null, "date >= ? and date <= ?", selection, null, null, null)
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast) {
@@ -235,8 +260,18 @@ class DataManagement (context: Context){
         return fatRates
     }
 
+    //新增体脂记录
+    fun insertFatRate(fatRate: FatRate){
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("date", fatRate.date)
+        contentValues.put("rate", fatRate.fatRate)
+        dataBase.insert("fat_rate", null, contentValues)
+        dataBase.close()
+    }
+
     //查询已记录日期
-    fun recordDates(type: Int):LinkedList<Int>{
+    fun queryRecordDates(type: Int):LinkedList<Int>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val dates = LinkedList<Int>()
         var table: String = ""
@@ -256,5 +291,64 @@ class DataManagement (context: Context){
         return dates
     }
 
+    //查询饮水记录
+    fun queryDrinkRecords(model: Int):LinkedList<DrinkRecord>{
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val drinkRecords = LinkedList<DrinkRecord>()
+        val now = LocalDate.now()
+        val calendar = Calendar.getInstance()
+        calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+        var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
+        var begin = 0
+        var selection: Array<String> = arrayOf()
+        when(model){
+            0 -> {
+                begin = nowUNIX - 31536000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            1 -> {
+                begin = nowUNIX - 2592000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            2 -> {
+                begin = nowUNIX - 7776000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            3 -> {
+                selection = arrayOf("0", "2147483647")
+            }
+        }
+        val result = dataBase.query("drink_records", null, "date >= ? and date <= ?", selection, null, null, null)
+        dataBase.close()
+        result.moveToFirst()
+        while (!result.isAfterLast) {
+            drinkRecords.add(DrinkRecord(result.getInt(0), result.getInt(1)))
+            result.moveToNext()
+        }
+        result.close()
+        return drinkRecords
+    }
 
+    //新增饮水记录
+    fun insertDrinkRecord(drinkRecord: DrinkRecord){
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("date", drinkRecord.date)
+        contentValues.put("volume", drinkRecord.volume)
+        dataBase.insert("drink_records", null, contentValues)
+        dataBase.close()
+    }
+
+    //查询腰围
+    fun queryWaist(): Double{
+        val sharedPreferences = context.getSharedPreferences("tempData",0)
+        return sharedPreferences.getString("waist", "")!!.toDouble()
+    }
+
+    //更新腰围
+    fun updataWaist(waist:Double){
+        val sharedPreferences = context.getSharedPreferences("tempData",0)
+        val dataEdit = sharedPreferences.edit()
+        dataEdit.putString("waist", waist.toString())
+    }
 }

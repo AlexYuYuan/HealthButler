@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Health-Butler</string>
+    <string name="cd_previous">Previous</string>
+    <string name="cd_next">Next</string>
 </resources>

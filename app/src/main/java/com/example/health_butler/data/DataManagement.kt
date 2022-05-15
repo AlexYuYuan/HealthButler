@@ -2,13 +2,13 @@ package com.example.health_butler.data
 
 import android.content.ContentValues
 import android.content.Context
-import android.content.SharedPreferences
-import android.database.Cursor
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.time.LocalDate
-import java.util.*
+import java.util.LinkedList
+import java.util.Calendar
+import kotlin.math.abs
 
 class DataManagement (context: Context){
 
@@ -50,9 +50,7 @@ class DataManagement (context: Context){
                             "time int not null default 0)")
 
             db?.execSQL("create table weight(date int primary key," +
-                            "weight double not null default 0)")
-
-            db?.execSQL("create table fat_rate(date int primary key," +
+                            "weight double not null default 0, " +
                             "rate double not null default 0)")
 
             db?.execSQL("create table body_size(date int primary key," +
@@ -251,35 +249,27 @@ class DataManagement (context: Context){
         }
     }
 
-    //查询体重记录
-    fun queryWeights():LinkedList<Weight>{
-        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val weights = LinkedList<Weight>()
-        val result = dataBase.query("weight", null, null, null, null, null, null)
-        dataBase.close()
-        result.moveToFirst()
-        while (!result.isAfterLast){
-            weights.add(Weight(result.getInt(0),result.getInt(1)))
-            result.moveToNext()
+    //新增体重记录（自动更新体脂）
+    fun insertWeight(weight: Weight): Int{
+        val waist = queryWaist(weight.weight)
+        if (waist != 0.0){
+            val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+            val contentValues = ContentValues()
+            contentValues.put("date", weight.date)
+            contentValues.put("weight", weight.weight)
+            contentValues.put("rate", ((waist * 0.74) - (weight.weight * 0.082))/weight.weight)
+            dataBase.insert("weight", null, contentValues)
+            dataBase.close()
+            return 1
         }
-        result.close()
-        return weights
+        else
+            return 0
     }
 
-    //新增体重记录
-    fun insertWeight(weight: Weight){
+    //按时间段查询体重体脂记录
+    fun queryFatRate(period: PERIOD): LinkedList<Weight>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put("date", weight.date)
-        contentValues.put("weight", weight.weight)
-        dataBase.insert("weight", null, contentValues)
-        dataBase.close()
-    }
-
-    //按时间段查询体脂记录
-    fun queryFatRate(period: PERIOD): LinkedList<FatRate>{
-        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val fatRates = LinkedList<FatRate>()
+        val fatRates = LinkedList<Weight>()
         val now = LocalDate.now()
         val calendar = Calendar.getInstance()
         calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
@@ -303,25 +293,15 @@ class DataManagement (context: Context){
                 selection = arrayOf("0", "2147483647")
             }
         }
-        val result = dataBase.query("fat_rate", null, "date >= ? and date <= ?", selection, null, null, null)
+        val result = dataBase.query("weight", null, "date >= ? and date <= ?", selection, null, null, null)
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast) {
-            fatRates.add(FatRate(result.getInt(0), result.getDouble(1)))
+            fatRates.add(Weight(result.getInt(0), result.getDouble(1), result.getDouble(2)))
             result.moveToNext()
         }
         result.close()
         return fatRates
-    }
-
-    //新增体脂记录
-    fun insertFatRate(fatRate: FatRate){
-        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val contentValues = ContentValues()
-        contentValues.put("date", fatRate.date)
-        contentValues.put("rate", fatRate.fatRate)
-        dataBase.insert("fat_rate", null, contentValues)
-        dataBase.close()
     }
 
     //查询已记录日期
@@ -394,15 +374,20 @@ class DataManagement (context: Context){
     }
 
     //查询腰围
-    fun queryWaist(): Double{
+    fun queryWaist(weight: Double): Double{
         val sharedPreferences = context.getSharedPreferences("tempData",0)
-        return sharedPreferences.getString("waist", "")!!.toDouble()
+        val lastWeight = sharedPreferences.getString("lastWeight", "")!!.toDouble()
+        if(abs(weight-lastWeight) >= 2)
+            return 0.0
+        else
+            return sharedPreferences.getString("waist", "")!!.toDouble()
     }
 
     //更新腰围
-    fun updataWaist(waist:Double){
+    fun updataWaist(waist:Double, weight: Double){
         val sharedPreferences = context.getSharedPreferences("tempData",0)
         val dataEdit = sharedPreferences.edit()
         dataEdit.putString("waist", waist.toString())
+        dataEdit.putString("lastWeight", weight.toString())
     }
 }

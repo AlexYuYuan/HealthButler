@@ -36,11 +36,9 @@ enum class FOODTYPE(val value: Int){
 }
 
 
-data class Weight(val date: Int, val weight:Int)
+data class Weight(val date: Int, val weight:Double, val fatRate: Double)
 
 data class Sport(val name:String, val calorie:Int)
-
-data class FatRate(val date: Int, val fatRate: Double)
 
 data class DrinkRecord(val date: Int, val volume: Int)
 

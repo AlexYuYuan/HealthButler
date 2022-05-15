@@ -36,7 +36,13 @@ enum class FOODTYPE(val value: Int){
 }
 
 
-data class Weight(val date: Int, val weight:Double, val fatRate: Double)
+data class Weight(val date: Int, val weight:Double, val fatRate: Double){
+    //获取格式化体脂率，保留两位小数
+    fun getPercentage(): String{
+        val double = (fatRate * 100).toString()
+        return double.substring(0, 5) + "%"
+    }
+}
 
 data class Sport(val name:String, val calorie:Int)
 
@@ -65,3 +71,5 @@ data class DietRecord(val date: Int, val type: TYPE, val food: Food, val quantit
         return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
     }
 }
+
+data class BodySize(val date: Int, val chest: Int, val waist: Int, val hip: Int)

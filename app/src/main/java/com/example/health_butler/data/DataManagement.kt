@@ -326,7 +326,7 @@ class DataManagement (context: Context){
     }
 
     //查询饮水记录
-    fun queryDrinkRecords(model: Int):LinkedList<DrinkRecord>{
+    fun queryDrinkRecords(period: PERIOD):LinkedList<DrinkRecord>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val drinkRecords = LinkedList<DrinkRecord>()
         val now = LocalDate.now()
@@ -335,20 +335,20 @@ class DataManagement (context: Context){
         var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
         var begin = 0
         var selection: Array<String> = arrayOf()
-        when(model){
-            0 -> {
+        when(period){
+            PERIOD.YEAR -> {
                 begin = nowUNIX - 31536000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            1 -> {
+            PERIOD.MONTH -> {
                 begin = nowUNIX - 2592000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            2 -> {
+            PERIOD.THREEMONTH -> {
                 begin = nowUNIX - 7776000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            3 -> {
+            PERIOD.ALL -> {
                 selection = arrayOf("0", "2147483647")
             }
         }
@@ -370,6 +370,56 @@ class DataManagement (context: Context){
         contentValues.put("date", drinkRecord.date)
         contentValues.put("volume", drinkRecord.volume)
         dataBase.insert("drink_records", null, contentValues)
+        dataBase.close()
+    }
+
+    //查询三围记录
+    fun queryBodySize(period: PERIOD): LinkedList<BodySize>{
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val bodySize = LinkedList<BodySize>()
+        val now = LocalDate.now()
+        val calendar = Calendar.getInstance()
+        calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+        var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
+        var begin = 0
+        var selection: Array<String> = arrayOf()
+        when(period){
+            PERIOD.YEAR -> {
+                begin = nowUNIX - 31536000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            PERIOD.MONTH -> {
+                begin = nowUNIX - 2592000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            PERIOD.THREEMONTH -> {
+                begin = nowUNIX - 7776000
+                selection = arrayOf(begin.toString(), nowUNIX.toString())
+            }
+            PERIOD.ALL -> {
+                selection = arrayOf("0", "2147483647")
+            }
+        }
+        val result = dataBase.query("body_size", null, "date >= ? and date <= ?", selection, null, null, null)
+        dataBase.close()
+        result.moveToFirst()
+        while (!result.isAfterLast) {
+            bodySize.add(BodySize(result.getInt(0), result.getInt(1), result.getInt(2), result.getInt(3)))
+            result.moveToNext()
+        }
+        result.close()
+        return bodySize
+    }
+
+    //新增三围记录
+    fun insertBodySize(bodySize: BodySize){
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put("date", bodySize.date)
+        contentValues.put("chest", bodySize.chest)
+        contentValues.put("waist", bodySize.waist)
+        contentValues.put("hip", bodySize.hip)
+        dataBase.insert("body_size", null, contentValues)
         dataBase.close()
     }
 

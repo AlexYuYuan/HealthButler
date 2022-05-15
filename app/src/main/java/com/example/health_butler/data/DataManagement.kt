@@ -13,8 +13,6 @@ import java.util.*
 class DataManagement (context: Context){
 
     private val context = context
-    enum class PERIOD{YEAR, MONTH, THREEMONTH, ALL}
-    enum class TYPE{DIET, SPORT, DRINK}
 
     private class DataBaseHelper(
         context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?,
@@ -23,25 +21,31 @@ class DataManagement (context: Context){
 
         override fun onCreate(db: SQLiteDatabase?) {
 
-            db?.execSQL("create table foods(food_id int not null primary key," +
+            db?.execSQL("create table food(food_id int not null primary key autoincrement," +
                             "food_name varchar(100) not null unique default''," +
-                            "type varchar(10) not null unique default''," +
+                            "type int not null default''," +
                             "unit varchar(10) not null default'g', " +
                             "calorie int not null default 0, " +
                             "carbohydrate int not null default 0," +
                             "protein int not null default 0," +
                             "fat int not null default 0)")
 
-            db?.execSQL("create table diet_records(recods_id int not null primary key," +
-                            "date int not null default 0," +
-                            "type varchar(10) not null unique default''," +
-                            "food_name INT CONSTRAINT f_fr_name REFERENCES foods(food_name), " +
-                            "weight double not null default 0)")
+            db?.execSQL("create table diet_record(date int primary key," +
+                            "calorie int not null default 0, " +
+                            "carbohydrate int not null default 0," +
+                            "protein int not null default 0," +
+                            "fat int not null default 0)")
 
-            db?.execSQL("create table sports(sport_name varchar(40) primary key," +
+            db?.execSQL("create table diet_food(record_id int not null primary key," +
+                            "date int constraint d_df_date references diet_records(date)," +
+                            "type int not null default''," +
+                            "food_name INT CONSTRAINT f_fr_name REFERENCES food(food_name), " +
+                            "quantity double not null default 0)")
+
+            db?.execSQL("create table sport(sport_name varchar(40) primary key," +
                             "calorie int not null default 0)")
 
-            db?.execSQL("create table sport_records(date int primary key," +
+            db?.execSQL("create table sport_record(date int primary key," +
                             "sport_name varchar(40) CONSTRAINT s_sr_name REFERENCES sports(sport_name), " +
                             "time int not null default 0)")
 
@@ -68,11 +72,11 @@ class DataManagement (context: Context){
     fun queryAllFoods(): LinkedList<Food> {
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val foodsList: LinkedList<Food> = LinkedList<Food>()
-        val result = dataBase.query("foods", null, null, null, null, null, "date")
+        val result = dataBase.query("food", null, null, null, null, null, "date")
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast){
-            foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7)))
+            foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.fromInt(result.getInt(2))))
             result.moveToNext()
         }
         result.close()
@@ -83,11 +87,11 @@ class DataManagement (context: Context){
     fun queryUserDefinedFoods():LinkedList<Food>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val foodsList: LinkedList<Food> = LinkedList<Food>()
-        val result = dataBase.query("foods", null, "type = ?", arrayOf("userDefined "), null, null, null)
+        val result = dataBase.query("food", null, "type = ?", arrayOf("userDefined "), null, null, null)
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast){
-            foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7)))
+            foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED))
             result.moveToNext()
         }
         result.close()
@@ -97,16 +101,16 @@ class DataManagement (context: Context){
     //添加食品，成功返回1，若食品名已存在返回0
     fun insertFoods(food: Food): Int{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        val result = dataBase.query("foods", null, "food_name = ?", arrayOf(food.getName()), null, null, null)
+        val result = dataBase.query("food", null, "food_name = ?", arrayOf(food.name), null, null, null)
         if (result.getCount() != 0){
             val contentValues = ContentValues()
-            contentValues.put("name", food.getName())
-            contentValues.put("type", food.getType())
-            contentValues.put("unit", food.getUnit())
-            contentValues.put("calorie", food.getCalorie())
-            contentValues.put("carbohydrate", food.getCarbohydrate())
-            contentValues.put("protein", food.getProtein())
-            contentValues.put("fat", food.getFat())
+            contentValues.put("name", food.name)
+            contentValues.put("type", food.type.value)
+            contentValues.put("unit", food.unit)
+            contentValues.put("calorie", food.calorie)
+            contentValues.put("carbohydrate", food.carbohydrate)
+            contentValues.put("protein", food.protein)
+            contentValues.put("fat", food.fat)
             dataBase.insert("foods", null, contentValues)
             result.close()
             dataBase.close()
@@ -122,11 +126,61 @@ class DataManagement (context: Context){
     //删除指定用户自定义食品
     fun delUserDefinedFood(food: Food){
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
-        dataBase.delete("foods","food_name = ?", arrayOf(food.getName()))
+        dataBase.delete("food","food_name = ?", arrayOf(food.name))
         dataBase.close()
     }
 
-    //查询所有运动记录
+    //新增饮食食品记录(自动更新饮食记录)
+    fun insertDiet(dietRecord: DietRecord){
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val contentValues = ContentValues()
+        var result = dataBase.query("diet_food", null, "food_name = ?", arrayOf(dietRecord.food.name), null, null, null)
+        if (result.getCount() < 1){
+            contentValues.put("date", dietRecord.date)
+            contentValues.put("quantity", dietRecord.quantity)
+            contentValues.put("foodName", dietRecord.food.name)
+            contentValues.put("type", dietRecord.type.value)
+            dataBase.insert("diet_food", null, contentValues)
+        }
+        else{
+            contentValues.put("quantity", result.getInt(4)+dietRecord.quantity)
+            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.food.name, dietRecord.date.toString()))
+        }
+        result.close()
+        contentValues.clear()
+        result = dataBase.query("diet_record", null, "date = ?", arrayOf(dietRecord.date.toString()), null, null, null)
+        if (result.getCount() < 1){
+            contentValues.put("date", dietRecord.date)
+            contentValues.put("calorie", (dietRecord.food.calorie * dietRecord.quantity).toInt())
+            contentValues.put("carbohydrate", (dietRecord.food.carbohydrate * dietRecord.quantity).toInt())
+            contentValues.put("protein", (dietRecord.food.protein * dietRecord.quantity).toInt())
+            contentValues.put("fat", (dietRecord.food.fat * dietRecord.quantity).toInt())
+            dataBase.insert("diet_food", null, contentValues)
+        }
+        else{
+            contentValues.put("calorie", result.getInt(1) + dietRecord.food.calorie * dietRecord.quantity)
+            contentValues.put("carbohydrate", result.getInt(2) + dietRecord.food.carbohydrate * dietRecord.quantity)
+            contentValues.put("protein", result.getInt(3) + dietRecord.food.protein * dietRecord.quantity)
+            contentValues.put("fat", result.getInt(4) + dietRecord.food.fat * dietRecord.quantity)
+            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.food.name, dietRecord.date.toString()))
+        }
+        result.close()
+        dataBase.close()
+    }
+
+    //查询饮食食品记录
+    fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val dietFoods = LinkedList<DietRecord>()
+        val result =  dataBase.query("diet_food ad df inner join food as f", arrayOf("name", "unit", "calorie", "carbohydrate", "protein", "fat", "f.type", "quantity"), "df.food_name = f.name and date = ? and type = ?", arrayOf(date.toString(), type.ordinal.toString()), null, null, null)
+        dataBase.close()
+        while (!result.isAfterLast){
+            dietFoods.add(DietRecord(date, type, Food(result.getString(0), result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4), result.getInt(5), FOODTYPE.fromInt(result.getInt(6))),result.getDouble(7)))
+        }
+        return dietFoods
+    }
+
+    //查询运动记录
     fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val sportRecords = LinkedList<SportRecord>()
@@ -153,7 +207,7 @@ class DataManagement (context: Context){
                 selection = arrayOf("0", "2147483647")
             }
         }
-        val result = dataBase.query("sport_records as sr inner join sport as s", arrayOf("date", "sport_name", "calorie", "time"), "sr.sport_name = s.sport_name and date >= ? and date <= ?", selection, null, null, "date")
+        val result = dataBase.query("sport_record as sr inner join sport as s", arrayOf("date", "sport_name", "calorie", "time"), "sr.sport_name = s.sport_name and date >= ? and date <= ?", selection, null, null, "date")
         dataBase.close()
         result.moveToFirst()
         while (!result.isAfterLast){
@@ -169,10 +223,10 @@ class DataManagement (context: Context){
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val contentValues = ContentValues()
 
-        contentValues.put("date", sportRecord.getDate())
-        contentValues.put("sport_name", sportRecord.getSport().name)
-        contentValues.put("time", sportRecord.getTime())
-        dataBase.insert("sport_records", null, contentValues)
+        contentValues.put("date", sportRecord.date)
+        contentValues.put("sport_name", sportRecord.sport.name)
+        contentValues.put("time", sportRecord.time)
+        dataBase.insert("sport_record", null, contentValues)
 
         dataBase.close()
     }
@@ -223,7 +277,7 @@ class DataManagement (context: Context){
     }
 
     //按时间段查询体脂记录
-    fun queryFatRate(model:Int): LinkedList<FatRate>{
+    fun queryFatRate(period: PERIOD): LinkedList<FatRate>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val fatRates = LinkedList<FatRate>()
         val now = LocalDate.now()
@@ -232,20 +286,20 @@ class DataManagement (context: Context){
         var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
         var begin = 0
         var selection: Array<String> = arrayOf()
-        when(model){
-            0 -> {
+        when(period){
+            PERIOD.YEAR -> {
                 begin = nowUNIX - 31536000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            1 -> {
+            PERIOD.MONTH -> {
                 begin = nowUNIX - 2592000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            2 -> {
+            PERIOD.THREEMONTH -> {
                 begin = nowUNIX - 7776000
                 selection = arrayOf(begin.toString(), nowUNIX.toString())
             }
-            3 -> {
+            PERIOD.ALL -> {
                 selection = arrayOf("0", "2147483647")
             }
         }
@@ -271,14 +325,14 @@ class DataManagement (context: Context){
     }
 
     //查询已记录日期
-    fun queryRecordDates(type: Int):LinkedList<Int>{
+    fun queryRecordDates(Table: TABLE):LinkedList<Int>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val dates = LinkedList<Int>()
         var table: String = ""
-        when(type){
-            0 -> table = "diet_records"
-            1 -> table = "sport_records"
-            2 -> table = "drink_records"
+        when(Table){
+            TABLE.DIET -> table = "diet_records"
+            TABLE.SPORT -> table = "sport_records"
+            TABLE.DRINK -> table = "drink_records"
         }
         val result = dataBase.query(table, arrayOf("date"), null, null, null, null, null)
         dataBase.close()

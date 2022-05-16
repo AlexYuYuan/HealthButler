@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/ingestion"
+        android:title="Ingestion"
+        android:icon="@drawable/ic_baseline_rice_bowl_24"/>
+
+    <item android:id="@+id/sport"
+        android:title="Sport"
+        android:icon="@drawable/ic_baseline_directions_run_24"/>
+
+    <item android:id="@+id/drink"
+        android:title="Drink"
+        android:icon="@drawable/ic_baseline_local_drink_24"/>
+
+    <item android:id="@+id/weightRecord"
+        android:title="WeightRecord"
+        android:icon="@drawable/ic_baseline_book_24"/>
+</menu>

@@ -3,20 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/circle.xml" value="0.146" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_book_24.xml" value="0.203" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_directions_run_24.xml" value="0.203" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_local_drink_24.xml" value="0.203" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_rice_bowl_24.xml" value="0.203" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_launcher_background.xml" value="0.146" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_next.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_previous.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_drink.xml" value="0.25364583333333335" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_ingestion.xml" value="0.25364583333333335" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_sport.xml" value="0.189453125" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_weightrecord.xml" value="0.2526041666666667" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/menu/menu.xml" value="0.25364583333333335" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_book_24.xml" value="0.136" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_rice_bowl_24.xml" value="0.136" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_baseline_youtube_searched_for_24.xml" value="0.136" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_launcher_background.xml" value="0.136" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/ic_previous.xml" value="0.136" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_drink.xml" value="0.18489583333333334" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_food_select.xml" value="0.22" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_ingestion.xml" value="0.18489583333333334" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_main.xml" value="0.16666666666666666" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_sport.xml" value="0.18489583333333334" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_weightrecord.xml" value="0.18489583333333334" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/menu/menu.xml" value="0.18020833333333333" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1335" />
       </map>
     </option>
   </component>

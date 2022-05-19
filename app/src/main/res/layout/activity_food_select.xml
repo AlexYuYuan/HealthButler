@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/searchContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_baseline_youtube_searched_for_24"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/filtrateContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/searchContent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+            android:layout_width="136dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="最近" />
+
+        <TextView
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="常用" />
+
+        <TextView
+            android:layout_width="137dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:text="自定义"/>
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/foodList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/filtrateContent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

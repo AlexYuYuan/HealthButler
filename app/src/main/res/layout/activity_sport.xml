@@ -1,17 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFEF8"
+    tools:context=".SportActivity">
 
-    <TextView
+    <ImageView
+        android:id="@+id/iv_calendar_previous"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sport"
-        android:textSize="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/cd_previous"
+        android:src="@drawable/ic_previous"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_calendar_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="100dp"
+        android:contentDescription="@string/cd_next"
+        android:src="@drawable/ic_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/iv_calendar_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_calendar_next"
+        tools:text="b" />
+
+    <LinearLayout
+        android:layout_width="400dp"
+        android:layout_height="180dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date"
+        app:layout_constraintVertical_bias="0.113"
+        android:background="#fff">
+
+        <LinearLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                android:text="运动时长"
+                android:textSize="30dp"
+                android:paddingLeft="20dp"
+                android:paddingVertical="5dp"
+                android:textColor="#000"
+                android:background="@drawable/textview_background_sporttime"/>
+            <LinearLayout
+                android:layout_width="155dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:paddingLeft="20dp"
+                android:background="#fff"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/completed"
+                    android:layout_width="50dp"
+                    android:layout_height="45dp"
+                    android:text="30"
+                    android:textSize="40dp"
+                    android:textColor="#000"
+                    android:paddingVertical="1dp"/>
+                <TextView
+                    android:layout_width="18dp"
+                    android:layout_height="40dp"
+                    android:textColor="#919191"
+                    android:text="/"
+                    android:textSize="30dp"
+                    android:layout_marginTop="8dp"/>
+                <TextView
+                    android:id="@+id/total_sportTime"
+                    android:layout_width="65dp"
+                    android:layout_height="30dp"
+                    android:textColor="#919191"
+                    android:text="60分钟"
+                    android:textSize="20dp"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:indeterminateOnly="false"
+            android:progressDrawable="@drawable/sporttime_circle"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginLeft="20dp"
+            android:progress="60" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

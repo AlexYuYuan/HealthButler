@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_ingestion.*
-import kotlinx.android.synthetic.main.activity_ingestion.progress_bar
 import kotlinx.android.synthetic.main.activity_sport.*
 
 class SportActivity : Fragment() {
     private var progr = 0
-    private var compeleted_sportT = 30
-    private var total_sportT = 70
+    var compeleted_sportT = 30
+    var total_sportT = 70
+    val params1 = arrayOf("one", "two", "three")
+    var i : Int = params1.size - 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,18 +23,31 @@ class SportActivity : Fragment() {
         val view = inflater.inflate(R.layout.activity_sport, container, false)
         return view
     }
-    val progress_bar = view?.findViewById<ProgressBar>(R.id.progress_bar)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        tv_date.text = params1[i]
+
+        iv_calendar_next.setOnClickListener {
+            if (i < params1.size - 1) {
+                i++
+            }
+            tv_date.text = params1[i]
+        }
+        iv_calendar_previous.setOnClickListener {
+            if (i > 0) {
+                i--
+            }
+            tv_date.text = params1[i]
+        }
+
         completed.text = "30"
         total_sportTime.text = "70"
-        progr = compeleted_sportT / total_sportT
+        progr = 60
         updateProgressBar()
     }
 
     private fun updateProgressBar() {
-        progress_bar?.progress = progr
-        text_view_progress.text = "$progr%"
+        sport_progress_bar.progress = progr
     }
 }

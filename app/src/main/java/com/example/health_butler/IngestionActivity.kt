@@ -42,7 +42,7 @@ class IngestionActivity : Fragment(){
     }
 
     private fun updateProgressBar() {
-        progress_bar.progress = progr
+        ingestion_progress_bar.progress = progr
         text_view_progress.text = "$progr%"
     }
 }

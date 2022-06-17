@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_ingestion.*
+import kotlinx.android.synthetic.main.activity_drink.*
+import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
+import kotlinx.android.synthetic.main.fragment_drink_top.*
 
 class DrinkActivity : Fragment() {
 
@@ -38,6 +40,17 @@ class DrinkActivity : Fragment() {
                 i--
             }
             tv_date.text = params1[i]
+        }
+
+        drinkWater.setOnClickListener {
+            val transaction = getChildFragmentManager().beginTransaction()
+            transaction.replace(R.id.buttom_layout, DrinkButtomLeftFragment())
+            transaction.commit()
+        }
+        remind.setOnClickListener {
+            val transaction = getChildFragmentManager().beginTransaction()
+            transaction.replace(R.id.buttom_layout, DrinkButtomRightFragment())
+            transaction.commit()
         }
     }
 }

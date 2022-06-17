@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9FEFF">
+
+    <ImageView
+        android:id="@+id/iv_calendar_previous"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="20dp"
+        android:contentDescription="@string/cd_previous"
+        android:src="@drawable/ic_previous"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_calendar_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="100dp"
+        android:contentDescription="@string/cd_next"
+        android:src="@drawable/ic_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/iv_calendar_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_calendar_next"
+        tools:text="b" />
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_date"
+        app:layout_constraintVertical_bias="0.075">
+
+        <TextView
+            android:id="@+id/drinkWater"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="喝水"
+            android:textColor="#101010"
+            android:textSize="20dp" />
+
+        <TextView
+            android:id="@+id/remind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="提醒"
+            android:textColor="#101010"
+            android:textSize="20dp" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

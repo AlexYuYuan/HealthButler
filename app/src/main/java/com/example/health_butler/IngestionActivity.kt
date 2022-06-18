@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_ingestion.*
+import kotlinx.android.synthetic.main.fragment_ingestion.*
 
 class IngestionActivity : Fragment(){
     private var progr = 0

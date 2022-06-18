@@ -39,38 +39,53 @@
         app:layout_constraintTop_toTopOf="@id/iv_calendar_next"
         tools:text="b" />
 
-    <TextView
-        android:id="@+id/totalIntake"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="总摄入"
-        android:textSize="20dp"
-        android:textColor="#000"
-        android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_date"/>
+<!--    <TextView-->
+<!--        android:id="@+id/totalIntake"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="总摄入"-->
+<!--        android:textSize="20dp"-->
+<!--        android:textColor="#000"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_date"/>-->
 
-    <ProgressBar
-        android:id="@+id/ingestion_progress_bar"
-        android:indeterminateOnly="false"
-        android:progressDrawable="@drawable/circle"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:progress="60"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/totalIntake" />
+<!--    <ProgressBar-->
+<!--        android:id="@+id/ingestion_progress_bar"-->
+<!--        android:indeterminateOnly="false"-->
+<!--        android:progressDrawable="@drawable/circle"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="180dp"-->
+<!--        android:progress="60"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/totalIntake" />-->
 
-    <TextView
-        android:id="@+id/text_view_progress"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/text_view_progress"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="60%"-->
+<!--        android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--        app:layout_constraintBottom_toBottomOf="@+id/ingestion_progress_bar"-->
+<!--        app:layout_constraintEnd_toEndOf="@+id/ingestion_progress_bar"-->
+<!--        app:layout_constraintStart_toStartOf="@+id/ingestion_progress_bar"-->
+<!--        app:layout_constraintTop_toTopOf="@+id/ingestion_progress_bar" />-->
+
+    <FrameLayout
+        android:id="@+id/statistics_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="60%"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="@+id/ingestion_progress_bar"
-        app:layout_constraintEnd_toEndOf="@+id/ingestion_progress_bar"
-        app:layout_constraintStart_toStartOf="@+id/ingestion_progress_bar"
-        app:layout_constraintTop_toTopOf="@+id/ingestion_progress_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_date"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <fragment
+            android:id="@+id/statistics_frag"
+            android:name="com.example.health_butler.TotalIngestionFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

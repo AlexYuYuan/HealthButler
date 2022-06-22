@@ -6,12 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.fragment_nutrient.*
+
 
 class NutrientFragment : Fragment() {
     override fun onCreateView(
@@ -45,7 +45,9 @@ class NutrientFragment : Fragment() {
         piedataset.setSliceSpace(5f)
 
         go_ingestion.setOnClickListener {
-            //调用父fragment中的resetFlag方法改变flag
+            val transaction = getFragmentManager()?.beginTransaction()
+            transaction?.replace(R.id.statistics_layout, TotalIngestionFragment())
+            transaction?.commit()
         }
     }
 }

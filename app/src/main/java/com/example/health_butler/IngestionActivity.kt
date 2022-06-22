@@ -52,10 +52,12 @@ class IngestionActivity : Fragment(){
             tv_date.text = params1[i]
         }
 
+        initFragmentView()
+
 //        progr = 70
 
 
-        resetFragment()
+//        resetFragment()
 //        updateProgressBar()
 //        updateChartView()
 
@@ -73,29 +75,33 @@ class IngestionActivity : Fragment(){
 
 
     }
-
-    fun resetFlag(num : Int){
-        flag = num
-        resetFragment()
+    fun initFragmentView() {
+        val transaction = getChildFragmentManager().beginTransaction()
+        transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
+        transaction.commit()
     }
 
-    fun resetFragment() {
-        // 根据flag改变子fragment布局
-        when (flag)
-        {
-            0 -> {
-                val transaction = getChildFragmentManager().beginTransaction()
-                transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
-                transaction.commit()
-            }
+//    fun resetFlag(num : Int){
+//        flag = num
+//        resetFragment()
+//    }
 
-            1 -> {
-                val transaction = getChildFragmentManager().beginTransaction()
-                transaction.replace(R.id.statistics_layout, NutrientFragment())
-                transaction.commit()
-            }
-        }
-    }
+//    fun resetFragment() {
+//        when (flag)
+//        {
+//            0 -> {
+//                val transaction = getChildFragmentManager().beginTransaction()
+//                transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
+//                transaction.commit()
+//            }
+//
+//            1 -> {
+//                val transaction = getChildFragmentManager().beginTransaction()
+//                transaction.replace(R.id.statistics_layout, NutrientFragment())
+//                transaction.commit()
+//            }
+//        }
+//    }
 
 //    private fun updateProgressBar() {
 //        ingestion_progress_bar.progress = progr

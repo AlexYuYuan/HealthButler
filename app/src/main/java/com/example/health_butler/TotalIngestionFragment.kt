@@ -1,6 +1,7 @@
 package com.example.health_butler
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +25,9 @@ class TotalIngestionFragment : Fragment() {
         text_view_progress.text = "$progr%"
 
         go_nutrient.setOnClickListener {
-            //调用父fragment中的resetFlag方法改变flag
+            val transaction = getFragmentManager()?.beginTransaction()
+            transaction?.replace(R.id.statistics_layout, NutrientFragment())
+            transaction?.commit()
         }
     }
 }

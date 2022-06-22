@@ -1,14 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="#F9FEFF">
-    <TextView
-        android:id="@+id/left"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="left"
-        android:textSize="50dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="380dp"
+        android:layout_height="60dp"
+        android:background="#fff"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.516"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:text="饮水目标"
+            android:textColor="#000"
+            android:textSize="22dp" />
+
+        <LinearLayout
+            android:id="@+id/drinking_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp">
+
+            <TextView
+                android:id="@+id/total_drinking"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:text="未设置" />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_next" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/drink_progress_bar"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:indeterminateOnly="false"
+        android:progress="60"
+        android:progressDrawable="@drawable/circle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.11" />
+
+    <LinearLayout
+        android:id="@+id/text_view_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="@+id/drink_progress_bar"
+        app:layout_constraintEnd_toEndOf="@+id/drink_progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/drink_progress_bar"
+        app:layout_constraintTop_toTopOf="@+id/drink_progress_bar" >
+
+        <TextView
+            android:id="@+id/current_drinking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1200"
+            android:textSize="35dp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ml"
+            android:textSize="25dp"
+            android:textColor="#000"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/add"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:backgroundTint="#1684FC"
+        android:text="+ 喝水"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/drink_progress_bar"
+        app:layout_constraintVertical_bias="0.096" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

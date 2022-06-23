@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="营养素"
+        android:text="三大营养素供能比例"
         android:textColor="#000"
         android:textSize="20dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -31,14 +31,14 @@
 
     <com.github.mikephil.charting.charts.PieChart
         android:id="@+id/chart_view"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="170dp"
+        android:layout_height="170dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
+        app:layout_constraintHorizontal_bias="0.057"
         app:layout_constraintStart_toEndOf="@+id/go_ingestion"
         app:layout_constraintTop_toBottomOf="@+id/totalIntake"
-        app:layout_constraintVertical_bias="0.045" />
+        app:layout_constraintVertical_bias="0.13" />
 
     <ImageView
         android:id="@+id/go_ingestion"

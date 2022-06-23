@@ -25,9 +25,9 @@ class NutrientFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val xvalues = ArrayList<String >()
-        xvalues.add("Coal")
-        xvalues.add("Petrolium")
-        xvalues.add("Natural Gas")
+        xvalues.add("CHO")
+        xvalues.add("PR")
+        xvalues.add("Lipids")
 
         val piechartentry = ArrayList<Entry>()
         piechartentry.add( Entry(23.5f, 0 ))

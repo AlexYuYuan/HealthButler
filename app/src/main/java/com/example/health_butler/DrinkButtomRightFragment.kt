@@ -9,8 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_drink_buttom_right.*
@@ -27,13 +25,6 @@ class DrinkButtomRightFragment : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-//        var allData : ArrayList<String> = arrayListOf("17:00","19:00","20:00")
-//        Log.v("aaa", "bbb")
-//        val adapter = ArrayAdapter<String>(requireActivity(), R.layout.fragment_drink_buttom_right,allData)
-//        Log.v("aaa", "ccc")
-//        showData.adapter = adapter
-//        Log.v("aaa", "ddd")
         
         switch1.setOnCheckedChangeListener { buttonView, isChecked ->
             if(isChecked) {

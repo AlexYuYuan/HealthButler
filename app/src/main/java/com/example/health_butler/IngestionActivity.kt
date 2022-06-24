@@ -1,14 +1,22 @@
 package com.example.health_butler
 
 
-import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.activity_ingestion.*
 import kotlinx.android.synthetic.main.fragment_ingestion.*
+import kotlinx.android.synthetic.main.fragment_ingestion.go_nutrient
 import kotlinx.android.synthetic.main.fragment_nutrient.*
 
 
@@ -45,19 +53,6 @@ class IngestionActivity : Fragment(){
         }
 
         initFragmentView()
-
-        addBreakfast.setOnClickListener {
-            val intent = Intent(activity, FoodSelectActivity::class.java)
-            startActivity(intent)
-        }
-
-        addLunch.setOnClickListener {
-
-        }
-
-        addDinner.setOnClickListener {
-
-        }
 
 //        progr = 70
 

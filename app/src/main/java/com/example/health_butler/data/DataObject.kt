@@ -65,8 +65,8 @@ data class SportRecord(val date: Int, val sport: Sport, val time: Int){
 
 data class Food(val name: String, val unit:String, val calorie: Int, val carbohydrate: Int, val protein: Int, val fat: Int, var type: FOODTYPE)
 
-data class DietRecord(val date: Int, val type: TYPE, val foodName: String, val quantity: Double){
-    //返回格式化饮食记录日期
+data class DietRecord(val date: Int, val type: TYPE, val food: Food, val quantity: Double){
+    //返回格式化运动记录日期
     fun getDateFormat(): String{
         return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
     }

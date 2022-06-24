@@ -1,6 +1,7 @@
 package com.example.health_butler
 
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_ingestion.*
 import kotlinx.android.synthetic.main.fragment_ingestion.*
 import kotlinx.android.synthetic.main.fragment_ingestion.go_nutrient
 import kotlinx.android.synthetic.main.fragment_nutrient.*
+import kotlin.math.log
 
 
 class IngestionActivity : Fragment(){
@@ -37,6 +39,8 @@ class IngestionActivity : Fragment(){
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        initFragmentView()
+
         tv_date.text = params1[i]
 
         iv_calendar_next.setOnClickListener {
@@ -52,7 +56,20 @@ class IngestionActivity : Fragment(){
             tv_date.text = params1[i]
         }
 
-        initFragmentView()
+
+
+        addBreakfast.setOnClickListener {
+            val intent = Intent(activity, FoodSelectActivity::class.java)
+            startActivity(intent)
+        }
+
+        addLunch.setOnClickListener {
+
+        }
+
+        addDinner.setOnClickListener {
+
+        }
 
 //        progr = 70
 

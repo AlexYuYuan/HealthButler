@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -9,11 +10,22 @@
         android:layout_height="wrap_content"
         android:layout_margin="2dp">
 
+        <TextView
+            android:id="@+id/target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="Drinking water"
+            android:textColor="#006ec5"
+            android:textSize="30dp"/>
+
         <EditText
             android:id="@+id/setDrinking"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="30dp"
             android:layout_width="200dp"
-            android:layout_height="50dp" />
+            android:layout_height="50dp"
+            android:layout_below="@+id/target"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,12 +40,18 @@
         <!--button for dismissing our dialog-->
         <Button
             android:id="@+id/idBtnDismiss"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="320dp"
+            android:layout_height="55dp"
             android:layout_below="@id/setDrinking"
-            android:layout_margin="5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:text="OK"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:backgroundTint="#1684fc"
+            app:layout_behavior="android.support.design.widget.ButtomSheetBehavior"/>
 
     </RelativeLayout>
 

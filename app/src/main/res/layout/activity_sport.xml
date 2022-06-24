@@ -41,6 +41,7 @@
         tools:text="b" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="400dp"
         android:layout_height="180dp"
         android:orientation="horizontal"
@@ -110,5 +111,20 @@
             android:layout_marginLeft="20dp"
             android:progress="60" />
     </LinearLayout>
+
+    <TextView
+        android:layout_width="330dp"
+        android:layout_height="50dp"
+        android:background="@drawable/textview_border"
+        android:gravity="center"
+        android:text="+"
+        android:textSize="40dp"
+        android:textColor="#acabab"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:layout_constraintVertical_bias="0.151"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

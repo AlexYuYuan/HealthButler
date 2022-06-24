@@ -96,6 +96,20 @@ class DataManagement (context: Context){
         return foodsList
     }
 
+    //查找指定食品
+    fun queryFood(foodName: String):Food{
+        val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
+        val food: Food
+        val result = dataBase.query("food", null, "food_name = ?", arrayOf(foodName), null, null, null)
+        dataBase.close()
+        result.moveToFirst()
+
+        food = Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED)
+
+        result.close()
+        return food
+    }
+
     //添加食品，成功返回1，若食品名已存在返回0
     fun insertFoods(food: Food): Int{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
@@ -132,35 +146,39 @@ class DataManagement (context: Context){
     fun insertDiet(dietRecord: DietRecord){
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val contentValues = ContentValues()
-        var result = dataBase.query("diet_food", null, "food_name = ?", arrayOf(dietRecord.food.name), null, null, null)
+        var result = dataBase.query("diet_food", null, "food_name = ?", arrayOf(dietRecord.foodName), null, null, null)
+        val food = Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED)
+        //如果饮食食品记录不存在则新增，否则更新数据
         if (result.getCount() < 1){
             contentValues.put("date", dietRecord.date)
             contentValues.put("quantity", dietRecord.quantity)
-            contentValues.put("foodName", dietRecord.food.name)
+            contentValues.put("foodName", dietRecord.foodName)
             contentValues.put("type", dietRecord.type.value)
             dataBase.insert("diet_food", null, contentValues)
         }
         else{
             contentValues.put("quantity", result.getInt(4)+dietRecord.quantity)
-            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.food.name, dietRecord.date.toString()))
+            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(food.name, dietRecord.date.toString()))
         }
         result.close()
         contentValues.clear()
         result = dataBase.query("diet_record", null, "date = ?", arrayOf(dietRecord.date.toString()), null, null, null)
+
+        //如果饮食记录不存在则新增，否则更新数据
         if (result.getCount() < 1){
             contentValues.put("date", dietRecord.date)
-            contentValues.put("calorie", (dietRecord.food.calorie * dietRecord.quantity).toInt())
-            contentValues.put("carbohydrate", (dietRecord.food.carbohydrate * dietRecord.quantity).toInt())
-            contentValues.put("protein", (dietRecord.food.protein * dietRecord.quantity).toInt())
-            contentValues.put("fat", (dietRecord.food.fat * dietRecord.quantity).toInt())
+            contentValues.put("calorie", (food.calorie * dietRecord.quantity).toInt())
+            contentValues.put("carbohydrate", (food.carbohydrate * dietRecord.quantity).toInt())
+            contentValues.put("protein", (food.protein * dietRecord.quantity).toInt())
+            contentValues.put("fat", (food.fat * dietRecord.quantity).toInt())
             dataBase.insert("diet_food", null, contentValues)
         }
         else{
-            contentValues.put("calorie", result.getInt(1) + dietRecord.food.calorie * dietRecord.quantity)
-            contentValues.put("carbohydrate", result.getInt(2) + dietRecord.food.carbohydrate * dietRecord.quantity)
-            contentValues.put("protein", result.getInt(3) + dietRecord.food.protein * dietRecord.quantity)
-            contentValues.put("fat", result.getInt(4) + dietRecord.food.fat * dietRecord.quantity)
-            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.food.name, dietRecord.date.toString()))
+            contentValues.put("calorie", result.getInt(1) + food.calorie * dietRecord.quantity)
+            contentValues.put("carbohydrate", result.getInt(2) + food.carbohydrate * dietRecord.quantity)
+            contentValues.put("protein", result.getInt(3) + food.protein * dietRecord.quantity)
+            contentValues.put("fat", result.getInt(4) + food.fat * dietRecord.quantity)
+            dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.foodName, dietRecord.date.toString()))
         }
         result.close()
         dataBase.close()
@@ -170,10 +188,10 @@ class DataManagement (context: Context){
     fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
         val dataBase = DataBaseHelper(context, "HealthButler", null, 1, null).writableDatabase
         val dietFoods = LinkedList<DietRecord>()
-        val result =  dataBase.query("diet_food ad df inner join food as f", arrayOf("name", "unit", "calorie", "carbohydrate", "protein", "fat", "f.type", "quantity"), "df.food_name = f.name and date = ? and type = ?", arrayOf(date.toString(), type.ordinal.toString()), null, null, null)
+        val result =  dataBase.query("diet_food", arrayOf("food_name", "quantity"), "date = ? and type = ?", arrayOf(date.toString(), type.ordinal.toString()), null, null, null)
         dataBase.close()
         while (!result.isAfterLast){
-            dietFoods.add(DietRecord(date, type, Food(result.getString(0), result.getString(1), result.getInt(2), result.getInt(3), result.getInt(4), result.getInt(5), FOODTYPE.fromInt(result.getInt(6))),result.getDouble(7)))
+            dietFoods.add(DietRecord(date, type, result.getString(1),result.getDouble(2)))
         }
         return dietFoods
     }
@@ -440,4 +458,10 @@ class DataManagement (context: Context){
         dataEdit.putString("waist", waist.toString())
         dataEdit.putString("lastWeight", weight.toString())
     }
+
+    fun getData(): Int{
+        val sharedPreferences = context.getSharedPreferences("tempData",0)
+        return sharedPreferences.getString("nowDate", "")!!.toInt()
+    }
 }
+

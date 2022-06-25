@@ -1,7 +1,10 @@
 package com.example.health_butler
 
+import android.app.Activity
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
+import android.content.Context
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -9,42 +12,60 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_drink_buttom_right.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 
 class DrinkButtomRightFragment : Fragment() {
+
+    var allData : ArrayList<String> = arrayListOf("17:00", "19:00", "20:00")   // 测试例子，实际上数据得从数据库中取
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drink_buttom_right, container, false)
+        val view = inflater.inflate(R.layout.fragment_drink_buttom_right, container, false)
+        return view
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-//        var allData : ArrayList<String> = arrayListOf("17:00", "19:00", "20:00")
-//        val adapter = ArrayAdapter<String>(this.requireContext(), R.layout.fragment_drink_buttom_right, allData)
-//        showData.adapter = adapter
-        
-        switch1.setOnCheckedChangeListener { buttonView, isChecked ->
-            if(isChecked) {
-                Log.v("aaa", "bbb")
-            }
-            else {
-                Log.v("aaa", "ccc")
-            }
-        }
+        val adapter = MyListAdapter(this.requireContext(), R.layout.time_item, allData)   // listview适配器
+        showData.adapter = adapter
 
+
+//        showData.setOnItemClickListener { adapterView, view, i, l ->
+//            val alertDialog = AlertDialog.Builder(this.requireContext()).create()
+//            alertDialog.setMessage("您确定删除此条信息吗？")
+//
+//            alertDialog.setButton(
+//                DialogInterface.BUTTON_NEGATIVE, "否"
+//            ) { dialog, which ->
+//            }
+//
+//            //将对应位置的数据删除
+//            alertDialog.setButton(
+//                DialogInterface.BUTTON_POSITIVE, "是"
+//            ) { dialog, which ->
+//                                 // 删除数据库条目
+//                allData.removeAt(i)   // 删除缓存数据
+//                adapter.notifyDataSetChanged()   // 刷新视图
+//                true
+//            }
+//            alertDialog.show()
+//            allData.removeAt(i)   // 删除缓存数据
+//            adapter.notifyDataSetChanged()   // 刷新视图
+//        }
+
+        // 添加闹钟，弹出对话框
         add.setOnClickListener {
             val _timePickerDialog : TimePickerDialog
-            val hourOfDay = 2
-            val minute = 2
+            val hourOfDay = 0
+            val minute = 0
             val is24HourView = true
             var hourS = ""
             var minuteS = ""
@@ -63,12 +84,57 @@ class DrinkButtomRightFragment : Fragment() {
                     else {
                         minuteS = "$i1"
                     }
-                    setTime.setText("$hourS:$minuteS")
+                                                      // 更新数据库
+                    allData.add("$hourS:$minuteS")   // 更新时间列表
+                    adapter.notifyDataSetChanged()   // 更新列表
                 }, hourOfDay, minute, is24HourView
             )
             _timePickerDialog.getWindow()?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             _timePickerDialog.setTitle("Select a Time")
             _timePickerDialog.show()
         }
+
+        // 长按删除条目
+
+
     }
+
+    // 继承adapter类，自定义列表
+    private class MyListAdapter(val activity: Context, val resourceID: Int, data: List<String>) : ArrayAdapter<String>(activity, resourceID, data) {
+
+        inner class ViewHolder(val timeList: TextView, val switch1: Switch)
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
+            val view: View
+            val viewHolder: ViewHolder
+
+            if (convertView == null) {
+                view = LayoutInflater.from(context).inflate(resourceID, parent, false)
+                val timeList: TextView = view.findViewById(R.id.timeList)
+                val switch1: Switch = view.findViewById(R.id.switch1)
+                viewHolder = ViewHolder(timeList, switch1)
+                view.tag = viewHolder
+            } else {
+                view = convertView
+                viewHolder = view.tag as ViewHolder
+            }
+
+            val time = getItem(position)   // 获取当前项
+
+            if (time != null) {
+                viewHolder.timeList.text = time   // 设置控件
+                viewHolder.switch1.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if(isChecked) {
+                        Toast.makeText(context,"The alarm clock turns on at $time",Toast.LENGTH_LONG).show()
+                    }
+                    else {
+                        Toast.makeText(context,"The alarm clock turns off at $time",Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+            return view
+        }
+    }
+
 }

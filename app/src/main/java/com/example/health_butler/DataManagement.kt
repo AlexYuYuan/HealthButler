@@ -134,19 +134,19 @@ fun queryFood(foodName: String):Food{
 }
 
 //添加食品，成功返回1，若食品名已存在返回0
-fun insertFoods(food: Food): Int{
+fun insertFood(food: Food): Int{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("food", null, "food_name = ?", arrayOf(food.name), null, null, null)
-    if (result.getCount() != 0){
+    if (result.getCount() == 0){
         val contentValues = ContentValues()
-        contentValues.put("name", food.name)
+        contentValues.put("food_name", food.name)
         contentValues.put("type", food.type.value)
         contentValues.put("unit", food.unit)
         contentValues.put("calorie", food.calorie)
         contentValues.put("carbohydrate", food.carbohydrate)
         contentValues.put("protein", food.protein)
         contentValues.put("fat", food.fat)
-        dataBase.insert("foods", null, contentValues)
+        val code = dataBase.insert("food", null, contentValues)
         result.close()
         dataBase.close()
         return 1
@@ -314,7 +314,7 @@ fun queryFatRate(period: PERIOD): LinkedList<Weight>{
     val fatRates = LinkedList<Weight>()
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue, now.dayOfMonth)
     var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
     var begin = 0
     var selection: Array<String> = arrayOf()
@@ -373,7 +373,7 @@ fun queryDrinkRecords(period: PERIOD):LinkedList<DrinkRecord>{
     val drinkRecords = LinkedList<DrinkRecord>()
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue, now.dayOfMonth)
     var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
     var begin = 0
     var selection: Array<String> = arrayOf()
@@ -421,7 +421,7 @@ fun queryBodySize(period: PERIOD): LinkedList<BodySize>{
     val bodySize = LinkedList<BodySize>()
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue, now.dayOfMonth)
     var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
     var begin = 0
     var selection: Array<String> = arrayOf()
@@ -487,7 +487,7 @@ fun updataWaist(waist:Double, weight: Double){
 fun getData(): Int{
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
-    var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
+    calendar.set(now.year, now.monthValue, now.dayOfMonth)
+    val nowUNIX: Int = (calendar.timeInMillis/1000) as Int
     return nowUNIX
 }

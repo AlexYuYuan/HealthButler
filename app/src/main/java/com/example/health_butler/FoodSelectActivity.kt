@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +14,7 @@ import java.util.LinkedList
 class FoodSelectActivity : AppCompatActivity(){
 
     lateinit private var number: String
+    lateinit private var type: TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,7 +23,8 @@ class FoodSelectActivity : AppCompatActivity(){
         val context = this
         val foodData: LinkedList<Food> = queryAllFoods()
         val foodAdapter = FoodAdapter(foodData)
-        val  recyclerView = findViewById<RecyclerView>(R.id.foodList)
+        val recyclerView = findViewById<RecyclerView>(R.id.foodList)
+        val addButton = findViewById<Button>(R.id.addFood)
 
         foodAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
@@ -36,6 +39,10 @@ class FoodSelectActivity : AppCompatActivity(){
             }
 
         })
+
+        addButton.setOnClickListener {
+            AddFoodDialog(context).show()
+        }
 
         if (recyclerView != null) {
             recyclerView.adapter = foodAdapter
@@ -77,7 +84,7 @@ class FoodSelectActivity : AppCompatActivity(){
 
         override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
             holder.foodName.setText(foodData.get(position).name)
-            holder.calorie.setText(foodData.get(position).calorie)
+            holder.calorie.setText(foodData.get(position).calorie.toString())
         }
 
         override fun getItemCount(): Int {

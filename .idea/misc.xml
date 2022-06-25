@@ -18,11 +18,12 @@
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/sporttime_circle.xml" value="0.1775" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/textview_background_sporttime.xml" value="0.1775" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_drink.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_food_select.xml" value="0.25364583333333335" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_food_select.xml" value="0.17153284671532848" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_ingestion.xml" value="0.25364583333333335" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_sport.xml" value="0.189453125" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_weightrecord.xml" value="0.2526041666666667" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/add_food_dialog.xml" value="0.22" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_buttom_left.xml" value="0.2526041666666667" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_buttom_right.xml" value="0.2526041666666667" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_top.xml" value="0.1" />

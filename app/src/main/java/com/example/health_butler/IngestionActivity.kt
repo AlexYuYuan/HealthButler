@@ -29,6 +29,8 @@ class IngestionActivity : Fragment(){
 
     var flag : Int = 0
 
+    
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

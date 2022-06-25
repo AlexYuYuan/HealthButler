@@ -111,13 +111,13 @@ fun queryUserDefinedFoods():LinkedList<Food>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val foodsList: LinkedList<Food> = LinkedList<Food>()
     val result = dataBase.query("food", null, "type = ?", arrayOf("userDefined "), null, null, null)
-    dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast){
         foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED))
         result.moveToNext()
     }
     result.close()
+    dataBase.close()
     return foodsList
 }
 
@@ -126,12 +126,10 @@ fun queryFood(foodName: String):Food{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val food: Food
     val result = dataBase.query("food", null, "food_name = ?", arrayOf(foodName), null, null, null)
-    dataBase.close()
     result.moveToFirst()
-
     food = Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED)
-
     result.close()
+    dataBase.close()
     return food
 }
 
@@ -305,8 +303,9 @@ fun insertWeight(weight: Weight): Int{
         dataBase.close()
         return 1
     }
-    else
+    else {
         return 0
+    }
 }
 
 //按时间段查询体重体脂记录
@@ -337,13 +336,13 @@ fun queryFatRate(period: PERIOD): LinkedList<Weight>{
         }
     }
     val result = dataBase.query("weight", null, "date >= ? and date <= ?", selection, null, null, null)
-    dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast) {
         fatRates.add(Weight(result.getInt(0), result.getDouble(1), result.getDouble(2)))
         result.moveToNext()
     }
     result.close()
+    dataBase.close()
     return fatRates
 }
 
@@ -358,13 +357,13 @@ fun queryRecordDates(Table: TABLE):LinkedList<Int>{
         TABLE.DRINK -> table = "drink_records"
     }
     val result = dataBase.query(table, arrayOf("date"), null, null, null, null, null)
-    dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast){
         dates.add(result.getInt(0))
         result.moveToNext()
     }
     result.close()
+    dataBase.close()
     return dates
 }
 
@@ -396,13 +395,13 @@ fun queryDrinkRecords(period: PERIOD):LinkedList<DrinkRecord>{
         }
     }
     val result = dataBase.query("drink_records", null, "date >= ? and date <= ?", selection, null, null, null)
-    dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast) {
         drinkRecords.add(DrinkRecord(result.getInt(0), result.getInt(1)))
         result.moveToNext()
     }
     result.close()
+    dataBase.close()
     return drinkRecords
 }
 
@@ -444,13 +443,13 @@ fun queryBodySize(period: PERIOD): LinkedList<BodySize>{
         }
     }
     val result = dataBase.query("body_size", null, "date >= ? and date <= ?", selection, null, null, null)
-    dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast) {
         bodySize.add(BodySize(result.getInt(0), result.getInt(1), result.getInt(2), result.getInt(3)))
         result.moveToNext()
     }
     result.close()
+    dataBase.close()
     return bodySize
 }
 
@@ -484,7 +483,11 @@ fun updataWaist(waist:Double, weight: Double){
     dataEdit.putString("lastWeight", weight.toString())
 }
 
+//获取当前日期unix
 fun getData(): Int{
-    val sharedPreferences = MyApplication.context.getSharedPreferences("tempData",0)
-    return sharedPreferences.getString("nowDate", "")!!.toInt()
+    val now = LocalDate.now()
+    val calendar = Calendar.getInstance()
+    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+    var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
+    return nowUNIX
 }

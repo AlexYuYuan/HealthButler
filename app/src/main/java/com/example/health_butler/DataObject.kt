@@ -1,4 +1,4 @@
-package com.example.health_butler.data
+package com.example.health_butler
 
 import java.text.SimpleDateFormat
 

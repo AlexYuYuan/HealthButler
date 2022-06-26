@@ -1,12 +1,13 @@
 package com.example.health_butler
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_sport.*
 
 class SportActivity : Fragment() {
@@ -54,6 +55,10 @@ class SportActivity : Fragment() {
         val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sports)   // listview适配器
         showSportData.adapter = adapter
 
+        addSport.setOnClickListener {
+            showDialog()
+        }
+
     }
 
     private fun updateProgressBar() {
@@ -63,6 +68,26 @@ class SportActivity : Fragment() {
     private fun initSports() {
         sports.add(Sports("跑步", 30, false))
         sports.add(Sports("跳绳", 20, true))
+    }
+
+    private fun showDialog() {
+        val sheet = layoutInflater.inflate(R.layout.setsport_dialog, null)
+        val dialog = Dialog(this.requireContext())
+        val window : Window? = dialog.getWindow()
+        dialog.setContentView(sheet)
+
+        window?.setGravity(Gravity.CENTER)
+        window?.setLayout(900, ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        val SportName : EditText = dialog.findViewById<EditText>(R.id.SportName)
+        val SportTime : EditText = dialog.findViewById<EditText>(R.id.SportTime)
+        val add : Button = dialog.findViewById<Button>(R.id.add)
+
+        add.setOnClickListener {
+            Toast.makeText(context, "$SportName", Toast.LENGTH_LONG).show()
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 
     private class MyListAdapter(val activity: Context, val resourceID: Int, data: List<Sports>) : ArrayAdapter<Sports>(activity, resourceID, data) {
@@ -96,7 +121,7 @@ class SportActivity : Fragment() {
                 viewHolder.sportTime.text = time.toString() + "分钟"
                 viewHolder.isComplete.isChecked = isComplete
                 viewHolder.isComplete.setOnCheckedChangeListener { buttonView, isChecked ->
-                    // 修改闹钟状态
+                    // 修改运动状态
                     if(isChecked) {
                         Toast.makeText(context,"turns on at $sportName", Toast.LENGTH_LONG).show()
                         // 更新数据库

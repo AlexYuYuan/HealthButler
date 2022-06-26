@@ -40,10 +40,11 @@ class DataBaseHelper(
                 "quantity double not null default 0)")
 
         db?.execSQL("create table sport(sport_name varchar(40) primary key," +
-                "calorie int not null default 0)")
+                "time int not null default 0)")
 
-        db?.execSQL("create table sport_record(date int primary key," +
-                "sport_name varchar(40) CONSTRAINT s_sr_name REFERENCES sports(sport_name), " +
+        db?.execSQL("create table sport_record(record_id INTEGER PRIMARY KEY autoincrement," +
+                "date int," +
+                "sport_name varchar(40), " +
                 "time int not null default 0)")
 
         db?.execSQL("create table weight(date int primary key," +
@@ -57,6 +58,9 @@ class DataBaseHelper(
 
         db?.execSQL("create table drink_records(date int primary key," +
                 "volume int not null default 0)")
+
+        db?.execSQL("create table clock(time String primary key," +
+                "state boolean not null default 0)")
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
@@ -170,7 +174,10 @@ fun insertDiet(dietRecord: DietRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
     var result = dataBase.query("diet_food", null, "food_name = ?", arrayOf(dietRecord.foodName), null, null, null)
-    val food = Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED)
+    var foodData = dataBase.query("food", null, "food_name = ?", arrayOf(dietRecord.foodName), null, null, null)
+    foodData.moveToFirst()
+    val food = Food(foodData.getString(1),foodData.getString(3),foodData.getInt(4),foodData.getInt(5),foodData.getInt(6), foodData.getInt(7), FOODTYPE.fromInt(foodData.getInt(2)))
+
     //如果饮食食品记录不存在则新增，否则更新数据
     if (result.getCount() < 1){
         contentValues.put("date", dietRecord.date)
@@ -225,7 +232,7 @@ fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
     val sportRecords = LinkedList<SportRecord>()
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-3, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue, now.dayOfMonth)
     var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
     var begin = 0
     var selection: Array<String> = arrayOf()
@@ -250,7 +257,7 @@ fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
     dataBase.close()
     result.moveToFirst()
     while (!result.isAfterLast){
-        sportRecords.add(SportRecord(result.getInt(0), Sport(result.getString(1), result.getInt(2)), result.getInt(3)))
+        sportRecords.add(SportRecord(result.getInt(0), result.getString(1), result.getInt(3)))
         result.moveToNext()
     }
     result.close()
@@ -263,21 +270,56 @@ fun insertSportRecord(sportRecord: SportRecord){
     val contentValues = ContentValues()
 
     contentValues.put("date", sportRecord.date)
-    contentValues.put("sport_name", sportRecord.sport.name)
+    contentValues.put("sport_name", sportRecord.sportName)
     contentValues.put("time", sportRecord.time)
     dataBase.insert("sport_record", null, contentValues)
 
     dataBase.close()
 }
 
-//新增运动项目,成功返回1，运动名已存在返回2
+//查询用户当天运动情况
+fun querySport(): List<SportShow>{
+    val sportList = LinkedList<SportShow>()
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val result = dataBase.query("sport", null, null, null, null, null, null)
+    result.moveToFirst()
+    while (!result.isAfterLast) {
+        var record = dataBase.query("sport_record", null, "date = ? and name = ?", arrayOf(getData().toString(), result.getString(0)), null, null, null)
+        if(record.count == 0)
+            sportList.add(SportShow(result.getString(0), result.getInt(1), false))
+        else
+            sportList.add(SportShow(result.getString(0), result.getInt(1), true))
+        result.moveToNext()
+        record.close()
+    }
+    result.close()
+    dataBase.close()
+    return sportList
+}
+
+fun querySportRecordByDate(date: Int): List<SportRecord>{
+    val sportRecordList = LinkedList<SportRecord>()
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val result = dataBase.query("sport_record", null, "date = ?", arrayOf(date.toString()), null, null, null)
+    result.moveToFirst()
+    while (!result.isAfterLast) {
+        sportRecordList.add(SportRecord(result.getInt(0), result.getString(1), result.getInt(2)))
+        result.moveToNext()
+    }
+    result.close()
+    dataBase.close()
+    return sportRecordList
+}
+
+
+//新增运动项目,成功返回1，运动名已存在返回0
 fun insertSport(sport: Sport):Int{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport", null, "name = ?", arrayOf(sport.name), null, null, null)
     if(result.getCount() != 0){
         val contentValues = ContentValues()
         contentValues.put("sport_name", sport.name)
-        contentValues.put("calorie", sport.calorie)
+        contentValues.put("time", sport.time)
         dataBase.insert("sport", null, contentValues)
         result.close()
         dataBase.close()
@@ -488,6 +530,6 @@ fun getData(): Int{
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
     calendar.set(now.year, now.monthValue, now.dayOfMonth)
-    val nowUNIX: Int = (calendar.timeInMillis/1000) as Int
-    return nowUNIX
+    val nowUNIX = calendar.timeInMillis/1000
+    return nowUNIX.toInt()
 }

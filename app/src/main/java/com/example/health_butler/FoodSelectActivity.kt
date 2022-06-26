@@ -13,7 +13,6 @@ import java.util.LinkedList
 
 class FoodSelectActivity : AppCompatActivity(){
 
-    lateinit private var number: String
     lateinit private var type: TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +27,13 @@ class FoodSelectActivity : AppCompatActivity(){
 
         foodAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
-                var num: String = ""
                 NumberSelectDialog(context, object : DialogListener {
                     override fun refreshActivity(number: String) {
-                        num = number
+                        insertDiet(DietRecord(getData(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
                     }
                 }).show()
-                number = num
-                insertDiet(DietRecord(getData(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
+
+
             }
 
         })

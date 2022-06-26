@@ -44,11 +44,11 @@ data class Weight(val date: Int, val weight:Double, val fatRate: Double){
     }
 }
 
-data class Sport(val name:String, val calorie:Int)
+data class Sport(val name:String, val time:Int)
 
 data class DrinkRecord(val date: Int, val volume: Int)
 
-data class SportRecord(val date: Int, val sport: Sport, val time: Int){
+data class SportRecord(val date: Int, val sportName: String, val time: Int){
     //返回格式化运动记录日期
     fun getDateFormat(): String{
         return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
@@ -73,3 +73,5 @@ data class DietRecord(val date: Int, val type: TYPE, val foodName: String, val q
 }
 
 data class BodySize(val date: Int, val chest: Int, val waist: Int, val hip: Int)
+
+data class SportShow(val name:String, val time:Int, val state:Boolean)

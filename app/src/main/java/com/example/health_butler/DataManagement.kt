@@ -535,8 +535,8 @@ fun getData(): Int{
     return nowUNIX.toInt()
 }
 
-fun getDateFormat(): String{
-    return SimpleDateFormat("YYYY年MM月DD日").format((getData()*1000) as Long)
+fun getDateFormat(date: Int): String{
+    return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
 }
 
 fun setWaterGoal(waterGoal: Int){

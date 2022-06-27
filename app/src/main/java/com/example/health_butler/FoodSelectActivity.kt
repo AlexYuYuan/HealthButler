@@ -14,6 +14,7 @@ import java.util.LinkedList
 class FoodSelectActivity : AppCompatActivity(){
 
     lateinit private var type: TYPE
+    private var current: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +47,18 @@ class FoodSelectActivity : AppCompatActivity(){
 
         allFood.setOnClickListener {
             foodData = queryAllFoods()
-            foodAdapter.notifyDataSetChanged()
+
+            recyclerView.adapter = FoodAdapter(foodData)
         }
 
         commonFood.setOnClickListener {
             foodData = queryFoodsByType(FOODTYPE.COMMON)
-            foodAdapter.notifyDataSetChanged()
+            recyclerView.adapter = FoodAdapter(foodData)
         }
 
         userDefinedFood.setOnClickListener {
             foodData = queryFoodsByType(FOODTYPE.USERDEFINED)
-            foodAdapter.notifyDataSetChanged()
+            recyclerView.adapter = FoodAdapter(foodData)
         }
 
         if (recyclerView != null) {

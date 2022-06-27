@@ -236,6 +236,10 @@ fun upSportData(name: String, state: Boolean){
         contentValues.put("time", result.getInt(1))
         dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
     }
+    else{
+        contentValues.put("time", 0)
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
+    }
 }
 
 //查询运动记录

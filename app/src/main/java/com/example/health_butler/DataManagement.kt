@@ -8,8 +8,7 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.util.LinkedList
-import java.util.Calendar
+import java.util.*
 import kotlin.math.abs
 
 class DataBaseHelper(
@@ -285,7 +284,7 @@ fun querySport(): List<SportShow>{
     val result = dataBase.query("sport", null, null, null, null, null, null)
     result.moveToFirst()
     while (!result.isAfterLast) {
-        var record = dataBase.query("sport_record", null, "date = ? and name = ?", arrayOf(getData().toString(), result.getString(0)), null, null, null)
+        var record = dataBase.query("sport_record", null, "date = ? and name = ?", arrayOf(getDate().toString(), result.getString(0)), null, null, null)
         if(record.count == 0)
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
         else
@@ -527,16 +526,17 @@ fun updataWaist(waist:Double, weight: Double){
 }
 
 //获取当前日期unix
-fun getData(): Int{
+fun getDate(): Int{
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue-1, now.dayOfMonth)
     val nowUNIX = calendar.timeInMillis/1000
     return nowUNIX.toInt()
 }
 
+//返回格式化日期
 fun getDateFormat(date: Int): String{
-    return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
+    return  SimpleDateFormat("YYYY年MM月dd日", Locale.getDefault()).format(date.toLong() * 1000)
 }
 
 fun setWaterGoal(waterGoal: Int){

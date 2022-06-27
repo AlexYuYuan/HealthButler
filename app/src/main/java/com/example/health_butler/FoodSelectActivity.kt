@@ -27,9 +27,10 @@ class FoodSelectActivity : AppCompatActivity(){
 
         foodAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
+                val date = getDateFormat(getDate())
                 NumberSelectDialog(context, object : DialogListener {
                     override fun refreshActivity(number: String) {
-                        insertDiet(DietRecord(getData(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
+                        insertDiet(DietRecord(getDate(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
                     }
                 }).show()
 

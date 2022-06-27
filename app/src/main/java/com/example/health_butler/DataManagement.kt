@@ -360,7 +360,7 @@ fun querySportRecordByDate(date: Int): List<SportShow>{
 fun insertSport(sport: Sport):Int{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(sport.name), null, null, null)
-    if(result.getCount() != 0){
+    if(result.getCount() == 0){
         val contentValues = ContentValues()
         contentValues.put("sport_name", sport.name)
         contentValues.put("time", sport.time)

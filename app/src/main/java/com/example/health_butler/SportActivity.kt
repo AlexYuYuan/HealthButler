@@ -52,11 +52,11 @@ class SportActivity : Fragment() {
 
         initSports()
 
-        val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sports)   // listview适配器
+        val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sports)  // listview适配器
         showSportData.adapter = adapter
 
         addSport.setOnClickListener {
-            showDialog()
+            showDialog()  // 显示对话框
         }
 
     }
@@ -65,6 +65,7 @@ class SportActivity : Fragment() {
         sport_progress_bar.progress = progr
     }
 
+    // 测试例子
     private fun initSports() {
         sports.add(Sports("跑步", 30, false))
         sports.add(Sports("跳绳", 20, true))
@@ -84,13 +85,27 @@ class SportActivity : Fragment() {
         val add : Button = dialog.findViewById<Button>(R.id.add)
 
         add.setOnClickListener {
-            Toast.makeText(context, "$SportName", Toast.LENGTH_LONG).show()
-            dialog.dismiss()
+            var name : String = ""
+            var time : Int = 0
+            var isComplete = false
+
+            if (SportName.text.toString().equals("") || SportTime.text.toString().equals("")) {
+                Toast.makeText(context, "Please enter information", Toast.LENGTH_LONG).show()
+            }
+            else {
+                name = SportName.text.toString()
+                time = SportTime.text.toString().toInt()
+                isComplete = false
+
+                //更新数据库
+                sports.add(Sports(name, time, isComplete))
+                dialog.dismiss()
+            }
         }
         dialog.show()
     }
 
-    private class MyListAdapter(val activity: Context, val resourceID: Int, data: List<Sports>) : ArrayAdapter<Sports>(activity, resourceID, data) {
+    class MyListAdapter(val activity: Context, val resourceID: Int, data: List<Sports>) : ArrayAdapter<Sports>(activity, resourceID, data) {
 
         inner class ViewHolder(val sportName: TextView, val sportTime : TextView, val isComplete: CheckBox)
 

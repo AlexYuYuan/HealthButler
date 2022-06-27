@@ -8,6 +8,7 @@ plugins {
 android {
     compileSdk 32
 
+    android {compileOptions.encoding = "utf8"}
     defaultConfig {
         applicationId "com.example.health_butler"
         minSdk 26

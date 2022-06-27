@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.util.LinkedList
 import java.util.Calendar
@@ -532,4 +533,20 @@ fun getData(): Int{
     calendar.set(now.year, now.monthValue, now.dayOfMonth)
     val nowUNIX = calendar.timeInMillis/1000
     return nowUNIX.toInt()
+}
+
+fun getDateFormat(): String{
+    return SimpleDateFormat("YYYY年MM月DD日").format((getData()*1000) as Long)
+}
+
+fun setWaterGoal(waterGoal: Int){
+    val sharedPreferences = MyApplication.context.getSharedPreferences("tempData",0)
+    val dataEdit = sharedPreferences.edit()
+    dataEdit.putString("waterGoal", waterGoal.toString())
+}
+
+fun getWaterGoal(): Int{
+    val sharedPreferences = MyApplication.context.getSharedPreferences("tempData",0)
+    val waterGoal = sharedPreferences.getString("waterGoal", "")!!.toInt()
+    return waterGoal
 }

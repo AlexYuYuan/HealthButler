@@ -110,11 +110,11 @@ fun queryAllFoods(): LinkedList<Food> {
     return foodsList
 }
 
-//查找用户自定义食品
-fun queryUserDefinedFoods():LinkedList<Food>{
+//查找指定种类义食品
+fun queryFoodsByType(type: FOODTYPE):LinkedList<Food>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val foodsList: LinkedList<Food> = LinkedList<Food>()
-    val result = dataBase.query("food", null, "type = ?", arrayOf("userDefined "), null, null, null)
+    val result = dataBase.query("food", null, "type = ?", arrayOf(type.value.toString()), null, null, null)
     result.moveToFirst()
     while (!result.isAfterLast){
         foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED))
@@ -226,6 +226,18 @@ fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
     return dietFoods
 }
 
+//更新运动完成状态
+fun upSportData(name: String, state: Boolean){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val contentValues = ContentValues()
+    if(state){
+        val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(name), null, null, null)
+        result.moveToFirst()
+        contentValues.put("time", result.getInt(1))
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
+    }
+}
+
 //查询运动记录
 fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
@@ -264,6 +276,8 @@ fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
     return sportRecords
 }
 
+
+
 //新增运动记录
 fun insertSportRecord(sportRecord: SportRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
@@ -277,6 +291,24 @@ fun insertSportRecord(sportRecord: SportRecord){
     dataBase.close()
 }
 
+//删除运动
+fun delSport(name:String){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    dataBase.delete("sport","sport_name = ?", arrayOf(name))
+    dataBase.close()
+}
+
+//更新运动目标时间（当天）
+fun upDateSportTime(name: String, time: Int){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val contentValues = ContentValues()
+
+    contentValues.put("time", time)
+
+    dataBase.update("sport", contentValues, "sport_name = ?", arrayOf(name))
+
+}
+
 //查询用户当天运动情况
 fun querySport(): List<SportShow>{
     val sportList = LinkedList<SportShow>()
@@ -284,9 +316,11 @@ fun querySport(): List<SportShow>{
     val result = dataBase.query("sport", null, null, null, null, null, null)
     result.moveToFirst()
     while (!result.isAfterLast) {
-        var record = dataBase.query("sport_record", null, "date = ? and name = ?", arrayOf(getDate().toString(), result.getString(0)), null, null, null)
-        if(record.count == 0)
+        var record = dataBase.query("sport_record", null, "date = ? and sport_name = ?", arrayOf(getDate().toString(), result.getString(0)), null, null, null)
+        if(record.count == 0 || result.getInt(2) == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
+            insertSportRecord(SportRecord(getDate(), result.getString(0), 0))
+        }
         else
             sportList.add(SportShow(result.getString(0), result.getInt(1), true))
         result.moveToNext()
@@ -297,25 +331,31 @@ fun querySport(): List<SportShow>{
     return sportList
 }
 
-fun querySportRecordByDate(date: Int): List<SportRecord>{
-    val sportRecordList = LinkedList<SportRecord>()
+//按日期查询运动记录
+fun querySportRecordByDate(date: Int): List<SportShow>{
+    val sportShowList = LinkedList<SportShow>()
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport_record", null, "date = ?", arrayOf(date.toString()), null, null, null)
     result.moveToFirst()
+    var state: Boolean
     while (!result.isAfterLast) {
-        sportRecordList.add(SportRecord(result.getInt(0), result.getString(1), result.getInt(2)))
+        if (result.getInt(2) == 0)
+            state = false
+        else
+            state = true
+        sportShowList.add(SportShow(result.getString(1), result.getInt(2), state))
         result.moveToNext()
     }
     result.close()
     dataBase.close()
-    return sportRecordList
+    return sportShowList
 }
 
 
 //新增运动项目,成功返回1，运动名已存在返回0
 fun insertSport(sport: Sport):Int{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
-    val result = dataBase.query("sport", null, "name = ?", arrayOf(sport.name), null, null, null)
+    val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(sport.name), null, null, null)
     if(result.getCount() != 0){
         val contentValues = ContentValues()
         contentValues.put("sport_name", sport.name)
@@ -529,7 +569,7 @@ fun updataWaist(waist:Double, weight: Double){
 fun getDate(): Int{
     val now = LocalDate.now()
     val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue-1, now.dayOfMonth)
+    calendar.set(now.year, now.monthValue-1, now.dayOfMonth, 0, 0, 0)
     val nowUNIX = calendar.timeInMillis/1000
     return nowUNIX.toInt()
 }

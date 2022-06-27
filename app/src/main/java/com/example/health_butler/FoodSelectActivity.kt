@@ -20,20 +20,21 @@ class FoodSelectActivity : AppCompatActivity(){
         setContentView(R.layout.activity_food_select)
 
         val context = this
-        val foodData: LinkedList<Food> = queryAllFoods()
+        var foodData: LinkedList<Food> = queryAllFoods()
         val foodAdapter = FoodAdapter(foodData)
         val recyclerView = findViewById<RecyclerView>(R.id.foodList)
         val addButton = findViewById<Button>(R.id.addFood)
+        val allFood = findViewById<TextView>(R.id.all)
+        val commonFood = findViewById<TextView>(R.id.common)
+        val userDefinedFood = findViewById<TextView>(R.id.userDefined)
 
         foodAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
-                val date = getDateFormat(getDate())
-                NumberSelectDialog(context, object : DialogListener {
+                NumberSelectDialog(context, foodData.get(position).name, foodData.get(position).unit, object : DialogListener {
                     override fun refreshActivity(number: String) {
                         insertDiet(DietRecord(getDate(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
                     }
                 }).show()
-
 
             }
 
@@ -41,6 +42,21 @@ class FoodSelectActivity : AppCompatActivity(){
 
         addButton.setOnClickListener {
             AddFoodDialog(context).show()
+        }
+
+        allFood.setOnClickListener {
+            foodData = queryAllFoods()
+            foodAdapter.notifyDataSetChanged()
+        }
+
+        commonFood.setOnClickListener {
+            foodData = queryFoodsByType(FOODTYPE.COMMON)
+            foodAdapter.notifyDataSetChanged()
+        }
+
+        userDefinedFood.setOnClickListener {
+            foodData = queryFoodsByType(FOODTYPE.USERDEFINED)
+            foodAdapter.notifyDataSetChanged()
         }
 
         if (recyclerView != null) {
@@ -75,7 +91,7 @@ class FoodSelectActivity : AppCompatActivity(){
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FoodAdapter.ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.food_item, parent, false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.food_item, null, false)
             view.setOnClickListener(this)
             rv = parent as RecyclerView
             return ViewHolder(view)
@@ -84,6 +100,8 @@ class FoodSelectActivity : AppCompatActivity(){
         override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
             holder.foodName.setText(foodData.get(position).name)
             holder.calorie.setText(foodData.get(position).calorie.toString())
+            val name = holder.foodName.text
+            val ca = holder.calorie.text
         }
 
         override fun getItemCount(): Int {

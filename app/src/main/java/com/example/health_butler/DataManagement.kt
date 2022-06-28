@@ -7,6 +7,7 @@ import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import java.text.SimpleDateFormat
+import java.time.Clock
 import java.time.LocalDate
 import java.util.*
 import kotlin.math.abs
@@ -360,11 +361,12 @@ fun querySportRecordByDate(date: Int): List<SportShow>{
 fun insertSport(sport: Sport):Int{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(sport.name), null, null, null)
+    val size = result.getCount()
     if(result.getCount() == 0){
         val contentValues = ContentValues()
         contentValues.put("sport_name", sport.name)
         contentValues.put("time", sport.time)
-        dataBase.insert("sport", null, contentValues)
+        val state = dataBase.insert("sport", null, contentValues)
         result.close()
         dataBase.close()
         return 1
@@ -501,6 +503,18 @@ fun insertDrinkRecord(drinkRecord: DrinkRecord){
     dataBase.close()
 }
 
+fun upDataDrinkRecord(volume: Int){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val contentValues = ContentValues()
+    if(dataBase.query("drink_records", null, "date = ?", arrayOf(getDate().toString()), null, null, null).count == 0)
+        insertDrinkRecord(DrinkRecord(getDate(), volume))
+    else {
+        contentValues.put("volume", volume)
+        dataBase.update("drink_records", contentValues, "date = ?", arrayOf(getDate().toString()))
+    }
+    dataBase.close()
+}
+
 //查询三围记录
 fun queryBodySize(period: PERIOD): LinkedList<BodySize>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
@@ -569,6 +583,25 @@ fun updataWaist(waist:Double, weight: Double){
     dataEdit.putString("lastWeight", weight.toString())
 }
 
+//新增闹钟
+fun insertClock(clock: AlarmClock){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val contentValues = ContentValues()
+    contentValues.put("time", clock.time)
+    contentValues.put("state", clock.state)
+    dataBase.insert("clock", null, contentValues)
+    dataBase.close()
+}
+
+//更新闹钟状态
+fun upDataClock(clock: AlarmClock){
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val contentValues = ContentValues()
+    contentValues.put("state", clock.state)
+    dataBase.update("clock", contentValues, "time = ?", arrayOf(clock.time))
+    dataBase.close()
+}
+
 //获取当前日期unix
 fun getDate(): Int{
     val now = LocalDate.now()
@@ -591,6 +624,6 @@ fun setWaterGoal(waterGoal: Int){
 
 fun getWaterGoal(): Int{
     val sharedPreferences = MyApplication.context.getSharedPreferences("tempData",0)
-    val waterGoal = sharedPreferences.getString("waterGoal", "")!!.toInt()
+    val waterGoal = sharedPreferences.getString("waterGoal", "2000")!!.toInt()
     return waterGoal
 }

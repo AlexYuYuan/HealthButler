@@ -34,6 +34,8 @@ class FoodSelectActivity : AppCompatActivity(){
                 NumberSelectDialog(context, foodData.get(position).name, foodData.get(position).unit, object : DialogListener {
                     override fun refreshActivity(number: String) {
                         insertDiet(DietRecord(getDate(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
+                        foodData = queryAllFoods()
+                        recyclerView.adapter = FoodAdapter(foodData)
                     }
                 }).show()
 
@@ -46,8 +48,8 @@ class FoodSelectActivity : AppCompatActivity(){
         }
 
         allFood.setOnClickListener {
+            insertSport(Sport("swimming", 10))
             foodData = queryAllFoods()
-
             recyclerView.adapter = FoodAdapter(foodData)
         }
 

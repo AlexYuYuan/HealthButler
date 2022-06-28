@@ -72,6 +72,8 @@ data class DietRecord(val date: Int, val type: TYPE, val foodName: String, val q
     }
 }
 
+data class AlarmClock(val time: String, val state: Boolean)
+
 data class BodySize(val date: Int, val chest: Int, val waist: Int, val hip: Int)
 
 data class SportShow(val name:String, val time:Int, val state:Boolean)

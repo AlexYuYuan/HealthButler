@@ -621,6 +621,7 @@ fun setWaterGoal(waterGoal: Int){
     val sharedPreferences = MyApplication.context.getSharedPreferences("tempData",0)
     val dataEdit = sharedPreferences.edit()
     dataEdit.putString("waterGoal", waterGoal.toString())
+    dataEdit.commit()
 }
 
 fun getWaterGoal(): Int{

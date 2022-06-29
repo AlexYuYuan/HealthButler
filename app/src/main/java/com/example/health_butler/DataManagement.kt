@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.DatabaseErrorHandler
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import java.text.SimpleDateFormat
 import java.time.Clock
 import java.time.LocalDate
@@ -315,14 +316,14 @@ fun upDateSportTime(name: String, time: Int){
 }
 
 //查询用户当天运动情况
-fun querySport(): List<SportShow>{
+fun querySport(): LinkedList<SportShow>{
     val sportList = LinkedList<SportShow>()
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport", null, null, null, null, null, null)
     result.moveToFirst()
     while (!result.isAfterLast) {
         var record = dataBase.query("sport_record", null, "date = ? and sport_name = ?", arrayOf(getDate().toString(), result.getString(0)), null, null, null)
-        if(record.count == 0 || result.getInt(2) == 0) {
+        if(record.count == 0 || record.getInt(2) == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
             insertSportRecord(SportRecord(getDate(), result.getString(0), 0))
         }

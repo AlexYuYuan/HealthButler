@@ -9,11 +9,13 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_sport.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 class SportActivity : Fragment() {
     private var progr = 0
-    var compeleted_sportT = 30
-    var total_sportT = 70
+    var compeleted_sportT  : Double  = 30.0
+    var total_sportT : Double = 70.0
     val params1 = arrayOf("one", "two", "three")
     var i : Int = params1.size - 1
 
@@ -29,6 +31,27 @@ class SportActivity : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+//        val date : Int = getDate()
+//        val sportName: String = "跑步"
+//        val time: Int = 30
+//        insertSport(Sport(sportName, time))
+//        val sportRecordList : List<SportRecord> = querySportRecordByDate(date)
+//        for(i in 0 until sportRecordList.size) {
+//            Log.v("aaa", "${sportRecordList.get(i).sportName}")
+//            Log.v("aaa", "${sportRecordList.get(i).time}")
+//        }
+
+//        var flag : Int = insertSport(Sport("跑步", 30))
+//        var flag2 : Int = insertSport(Sport("跑步", 20))
+//        if (flag2 == 1) {
+//
+//
+//                Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
+//
+//        }else if (flag2 == 0) {
+//            Toast.makeText(context, "error", Toast.LENGTH_LONG).show()
+//        }
 
         tv_date.text = params1[i]
 
@@ -47,7 +70,8 @@ class SportActivity : Fragment() {
 
         completed.text = "30"
         total_sportTime.text = "70"
-        progr = 60
+        progr = Math.floor((30.0 / 70) * 100).toInt()
+
         updateProgressBar()
 
         initSports()

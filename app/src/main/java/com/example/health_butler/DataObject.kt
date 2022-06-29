@@ -1,6 +1,7 @@
 package com.example.health_butler
 
 import java.text.SimpleDateFormat
+import java.util.*
 
 enum class PERIOD(val value: Int){
     YEAR(0),
@@ -51,7 +52,7 @@ data class DrinkRecord(val date: Int, val volume: Int)
 data class SportRecord(val date: Int, val sportName: String, val time: Int){
     //返回格式化运动记录日期
     fun getDateFormat(): String{
-        return SimpleDateFormat("YYYY年MM月DD日").format((date*1000) as Long)
+        return SimpleDateFormat("YYYY年MM月DD日", Locale.getDefault()).format(date.toLong() * 1000)
     }
 
     //返回格式化运动时长

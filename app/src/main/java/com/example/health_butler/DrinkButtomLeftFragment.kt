@@ -29,6 +29,9 @@ class DrinkButtomLeftFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        targetDrinking = getWaterGoal()
+        total_drinking.text = targetDrinking.toString() + " ml"
+
         drinking_target.setOnClickListener {
             showDialog(0)
         }
@@ -48,6 +51,7 @@ class DrinkButtomLeftFragment : Fragment() {
         idBtnDismiss?.setOnClickListener {
             if (num == 0) {
                 targetDrinking = setDrinking?.text.toString().toInt()
+                setWaterGoal(targetDrinking)
                 total_drinking.text = targetDrinking.toString() + " ml"
             }
             else if (num == 1) {

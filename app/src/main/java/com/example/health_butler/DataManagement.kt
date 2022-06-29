@@ -81,7 +81,7 @@ class MyApplication : Application() {
 
 //数据库对象以单例模式运行
 class SingleDataBase private constructor() {
-    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "calorie", null, 1, null)
+    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 1, null)
     companion object {
         private var instance: SingleDataBase? = null
             get() {

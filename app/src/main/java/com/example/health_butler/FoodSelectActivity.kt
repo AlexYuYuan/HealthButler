@@ -103,7 +103,7 @@ class FoodSelectActivity : AppCompatActivity(){
 
         override fun onBindViewHolder(holder: FoodAdapter.ViewHolder, position: Int) {
             holder.foodName.setText(foodData.get(position).name)
-            holder.calorie.setText(foodData.get(position).calorie.toString())
+            holder.calorie.setText("热量" + foodData.get(position).calorie.toString() + "/" + foodData.get(position).unit.toString())
             val name = holder.foodName.text
             val ca = holder.calorie.text
         }

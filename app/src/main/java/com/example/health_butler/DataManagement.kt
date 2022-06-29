@@ -466,42 +466,19 @@ fun queryRecordDates(Table: TABLE):LinkedList<Int>{
     return dates
 }
 
-//查询饮水记录
-fun queryDrinkRecords(period: PERIOD):LinkedList<DrinkRecord>{
+//查询饮水记录,无饮水记录返回null
+fun queryDrinkRecords(date: Int): DrinkRecord?{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
-    val drinkRecords = LinkedList<DrinkRecord>()
-    val now = LocalDate.now()
-    val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue, now.dayOfMonth)
-    var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
-    var begin = 0
-    var selection: Array<String> = arrayOf()
-    when(period){
-        PERIOD.YEAR -> {
-            begin = nowUNIX - 31536000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        PERIOD.MONTH -> {
-            begin = nowUNIX - 2592000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        PERIOD.THREEMONTH -> {
-            begin = nowUNIX - 7776000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        PERIOD.ALL -> {
-            selection = arrayOf("0", "2147483647")
-        }
-    }
-    val result = dataBase.query("drink_records", null, "date >= ? and date <= ?", selection, null, null, null)
-    result.moveToFirst()
-    while (!result.isAfterLast) {
-        drinkRecords.add(DrinkRecord(result.getInt(0), result.getInt(1)))
-        result.moveToNext()
+    val drinkRecords: DrinkRecord
+    val result = dataBase.query("drink_records", null, "date = ?", arrayOf(date.toString()), null, null, null)
+    if (result.count != 0) {
+        result.moveToFirst()
+        drinkRecords = DrinkRecord(result.getInt(0), result.getInt(1))
+        return drinkRecords
     }
     result.close()
     dataBase.close()
-    return drinkRecords
+    return null
 }
 
 //新增饮水记录

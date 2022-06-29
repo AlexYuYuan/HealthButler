@@ -48,7 +48,6 @@ class FoodSelectActivity : AppCompatActivity(){
         }
 
         allFood.setOnClickListener {
-            insertSport(Sport("swimming", 10))
             foodData = queryAllFoods()
             recyclerView.adapter = FoodAdapter(foodData)
         }

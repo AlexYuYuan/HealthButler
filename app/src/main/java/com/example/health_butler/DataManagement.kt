@@ -330,12 +330,15 @@ fun querySport(): LinkedList<SportShow>{
             insertSportRecord(SportRecord(getDate(), result.getString(0), 0))
         }
         //如果运动记录时间为0则运动状态为未完成
-        if(record.getInt(2) == 0){
-            sportList.add(SportShow(result.getString(0), result.getInt(1), false))
+        else{
+            record.moveToFirst()
+            if(record.getInt(3) == 0) {
+                sportList.add(SportShow(result.getString(0), result.getInt(1), false))
+            }
+            else
+                sportList.add(SportShow(result.getString(0), result.getInt(1), true))
         }
         //否则为完成
-        else
-            sportList.add(SportShow(result.getString(0), result.getInt(1), true))
         result.moveToNext()
         record.close()
     }

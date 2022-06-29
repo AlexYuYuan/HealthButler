@@ -10,13 +10,15 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import kotlinx.android.synthetic.main.activity_sport.*
 import kotlinx.android.synthetic.main.buttom_setdrinking_dialog.*
 import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
 
 class DrinkButtomLeftFragment : Fragment() {
 
-    var targetDrinking = 0   // 目标饮水量
-    var currentDrinking = 0   // 目前饮水量
+    private var progr = 0
+    private var targetDrinking = 0   // 目标饮水量
+    private var currentDrinking = 0   // 目前饮水量
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,6 +33,7 @@ class DrinkButtomLeftFragment : Fragment() {
 
         targetDrinking = getWaterGoal()
         total_drinking.text = targetDrinking.toString() + " ml"
+//        current_drinking.text = queryDrinkRecords(getDate()).toString()
 
         drinking_target.setOnClickListener {
             showDialog(0)
@@ -56,10 +59,15 @@ class DrinkButtomLeftFragment : Fragment() {
             }
             else if (num == 1) {
                 currentDrinking = setDrinking?.text.toString().toInt()
+                upDataDrinkRecord(currentDrinking)
                 current_drinking.text = currentDrinking.toString()
             }
             dialog.dismiss()
         }
         dialog.show()
+    }
+
+    private fun updateProgressBar() {
+        drink_progress_bar.progress = progr
     }
 }

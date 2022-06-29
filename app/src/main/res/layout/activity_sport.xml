@@ -133,10 +133,9 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="15dp"
         android:layout_width="330dp"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:divider="@android:color/transparent"
+        android:stackFromBottom="true"
         android:dividerHeight="8dp"/>
-
-
 
 </LinearLayout>

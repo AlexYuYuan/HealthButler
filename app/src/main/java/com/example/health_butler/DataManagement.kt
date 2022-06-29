@@ -322,11 +322,13 @@ fun querySport(): LinkedList<SportShow>{
     val result = dataBase.query("sport", null, null, null, null, null, null)
     result.moveToFirst()
     //循环查询每一个运动完成状态
+    Log.v("aaa","ccc")
     while (!result.isAfterLast) {
         var record = dataBase.query("sport_record", null, "date = ? and sport_name = ?", arrayOf(getDate().toString(), result.getString(0)), null, null, null)
         //如果运动记录不存在，运动状态为未完成且新增记录
         if(record.count == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
+            Log.v("aaa","eee")
             insertSportRecord(SportRecord(getDate(), result.getString(0), 0))
         }
         //如果运动记录时间为0则运动状态为未完成

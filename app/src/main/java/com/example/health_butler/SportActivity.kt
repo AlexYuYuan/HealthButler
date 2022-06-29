@@ -3,6 +3,7 @@ package com.example.health_butler
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.os.strictmode.CredentialProtectedWhileLockedViolation
 import android.util.Log
 import android.view.*
 import android.widget.*
@@ -13,13 +14,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class SportActivity : Fragment() {
-    private var progr = 0
-    var compeleted_sportT  : Double  = 30.0
-    var total_sportT : Double = 70.0
+
     val params1 = arrayOf("one", "two", "three")
     var i : Int = params1.size - 1
 
-    private val sports = ArrayList<Sports>()
+//    private val sports = ArrayList<Sports>()
+    private var sportList : LinkedList<SportShow> = querySport()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,27 +31,6 @@ class SportActivity : Fragment() {
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-//        val date : Int = getDate()
-//        val sportName: String = "跑步"
-//        val time: Int = 30
-//        insertSport(Sport(sportName, time))
-//        val sportRecordList : List<SportRecord> = querySportRecordByDate(date)
-//        for(i in 0 until sportRecordList.size) {
-//            Log.v("aaa", "${sportRecordList.get(i).sportName}")
-//            Log.v("aaa", "${sportRecordList.get(i).time}")
-//        }
-
-//        var flag : Int = insertSport(Sport("跑步", 30))
-//        var flag2 : Int = insertSport(Sport("跑步", 20))
-//        if (flag2 == 1) {
-//
-//
-//                Toast.makeText(context, "success", Toast.LENGTH_LONG).show()
-//
-//        }else if (flag2 == 0) {
-//            Toast.makeText(context, "error", Toast.LENGTH_LONG).show()
-//        }
 
         tv_date.text = params1[i]
 
@@ -68,15 +47,14 @@ class SportActivity : Fragment() {
             tv_date.text = params1[i]
         }
 
-        completed.text = "30"
-        total_sportTime.text = "70"
-        progr = Math.floor((30.0 / 70) * 100).toInt()
+//        completed.text = "30"
+//        total_sportTime.text = "70"
+//        progr = Math.floor((30.0 / 70) * 100).toInt()
 
-        updateProgressBar()
+        updateProgress()
 
-        initSports()
 
-        val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sports)  // listview适配器
+        val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
         showSportData.adapter = adapter
 
         addSport.setOnClickListener {
@@ -85,15 +63,26 @@ class SportActivity : Fragment() {
 
     }
 
-    private fun updateProgressBar() {
+    private fun updateProgress() {
+        var target : Int = 0
+        var current : Int = 0
+        for(i in 0 until sportList.size) {
+            target += sportList.get(i).time
+            if (sportList.get(i).state) {
+                current += sportList.get(i).time
+            }
+        }
+        completed.text = current.toString()
+        total_sportTime.text = target.toString() + "分钟"
+        var progr = Math.floor((current.toDouble() / target.toDouble()) * 100).toInt()
         sport_progress_bar.progress = progr
     }
 
     // 测试例子
-    private fun initSports() {
-        sports.add(Sports("跑步", 30, false))
-        sports.add(Sports("跳绳", 20, true))
-    }
+//    private fun initSports() {
+//        sports.add(Sports("跑步", 30, false))
+//        sports.add(Sports("跳绳", 20, true))
+//    }
 
     private fun showDialog() {
         val sheet = layoutInflater.inflate(R.layout.setsport_dialog, null)
@@ -121,15 +110,22 @@ class SportActivity : Fragment() {
                 time = SportTime.text.toString().toInt()
                 isComplete = false
 
-                //更新数据库
-                sports.add(Sports(name, time, isComplete))
+                var flag : Int = insertSport(Sport(name, time))//更新数据库
+                if (flag == 1) {
+                    Toast.makeText(context, "Successfully added", Toast.LENGTH_LONG).show()
+                    sportList.add(SportShow(name, time, isComplete))
+                    updateProgress()
+                }
+                else if (flag == 0) {
+                    Toast.makeText(context, "This sport already exists", Toast.LENGTH_LONG).show()
+                }
                 dialog.dismiss()
             }
         }
         dialog.show()
     }
 
-    class MyListAdapter(val activity: Context, val resourceID: Int, data: List<Sports>) : ArrayAdapter<Sports>(activity, resourceID, data) {
+    class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
 
         inner class ViewHolder(val sportName: TextView, val sportTime : TextView, val isComplete: CheckBox)
 
@@ -153,9 +149,9 @@ class SportActivity : Fragment() {
             val sportsList = getItem(position)   // 获取当前项
 
             if (sportsList != null) {
-                var sportName = sportsList.sportName
+                var sportName = sportsList.name
                 var time = sportsList.time
-                var isComplete = sportsList.isComplete
+                var isComplete = sportsList.state
                 viewHolder.sportName.text = sportName   // 设置控件
                 viewHolder.sportTime.text = time.toString() + "分钟"
                 viewHolder.isComplete.isChecked = isComplete
@@ -163,11 +159,11 @@ class SportActivity : Fragment() {
                     // 修改运动状态
                     if(isChecked) {
                         Toast.makeText(context,"turns on at $sportName", Toast.LENGTH_LONG).show()
-                        // 更新数据库
+                        upSportData(sportName, true)// 更新数据库
                     }
                     else {
                         Toast.makeText(context,"turns off at $sportName", Toast.LENGTH_LONG).show()
-                        // 更新数据库
+                        upSportData(sportName, false)// 更新数据库
                     }
                 }
             }

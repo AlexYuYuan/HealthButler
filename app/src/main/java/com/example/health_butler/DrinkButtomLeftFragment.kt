@@ -33,7 +33,7 @@ class DrinkButtomLeftFragment() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        parentFragmentManager.setFragmentResultListener("type", this, FragmentResultListener { requestKey, result ->
+        parentFragmentManager.setFragmentResultListener("changeDate", this, FragmentResultListener { requestKey, result ->
             //事件处理
             val date = result.getString("date")
             val drinkRecord = queryDrinkRecords(date!!.toInt())

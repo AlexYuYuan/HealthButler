@@ -237,7 +237,7 @@ fun upSportData(name: String, date: Int, state: Boolean){
     if(state){
         val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(name), null, null, null)
         result.moveToFirst()
-        contentValues.put("time", result.getInt(1))
+        contentValues.put("state", 1)
         dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, date.toString()))
     }
     else{

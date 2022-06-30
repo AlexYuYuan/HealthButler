@@ -31,9 +31,9 @@ class DrinkTopFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         iv_calendar_previous.setOnClickListener {
-            parentFragmentManager.setFragmentResult("type", Bundle().apply {
-                putString("date", getDate().toString())
-            })
+            val result = Bundle()
+            result.putString("date", getDate().toString())
+            parentFragmentManager.setFragmentResult("type", result)
         }
 
         iv_calendar_next.setOnClickListener {

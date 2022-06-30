@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_sport.*
@@ -26,7 +27,13 @@ class DrinkButtomLeftFragment() : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_drink_buttom_left, container, false)
-        parentFragmentManager.setFragmentResultListener("type", this, { requestKey, result ->
+        return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        parentFragmentManager.setFragmentResultListener("type", this, FragmentResultListener { requestKey, result ->
             //事件处理
             val date = result.getString("date")
             val drinkRecord = queryDrinkRecords(date!!.toInt())
@@ -35,11 +42,6 @@ class DrinkButtomLeftFragment() : Fragment() {
                 currentDrinking = drinkRecord.volume
             }
         })
-        return view
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
 
         targetDrinking = getWaterGoal()
         total_drinking.text = targetDrinking.toString() + " ml"

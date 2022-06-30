@@ -63,6 +63,14 @@ class FoodSelectActivity : AppCompatActivity(){
 
         addButton.setOnClickListener {
             AddFoodDialog(context).show()
+            foodData = queryAllFoods()
+            allFood.setBackgroundColor(Color.GRAY)
+            allFood.setTextColor(Color.WHITE)
+            commonFood.setBackgroundColor(Color.WHITE)
+            commonFood.setTextColor(Color.GRAY)
+            userDefinedFood.setBackgroundColor(Color.WHITE)
+            userDefinedFood.setTextColor(Color.GRAY)
+            recyclerView.adapter = FoodAdapter(foodData)
         }
 
         allFood.setOnClickListener {

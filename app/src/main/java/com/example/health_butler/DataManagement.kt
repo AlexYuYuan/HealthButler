@@ -229,18 +229,18 @@ fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
 }
 
 //更新运动完成状态
-fun upSportData(name: String, state: Boolean){
+fun upSportData(name: String, date: Int, state: Boolean){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
     if(state){
         val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(name), null, null, null)
         result.moveToFirst()
         contentValues.put("time", result.getInt(1))
-        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, date.toString()))
     }
     else{
         contentValues.put("time", 0)
-        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, date.toString()))
     }
 }
 

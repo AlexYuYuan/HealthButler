@@ -130,15 +130,18 @@ fun queryFoodsByType(type: FOODTYPE):LinkedList<Food>{
 }
 
 //查找指定食品
-fun queryFood(foodName: String):Food{
+fun queryFood(foodName: String):LinkedList<Food>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
-    val food: Food
-    val result = dataBase.query("food", null, "food_name = ?", arrayOf(foodName), null, null, null)
+    val foodsList: LinkedList<Food> = LinkedList<Food>()
+    val result = dataBase.query("food", null, "food_name like '%" + foodName + "%'", null, null, null, null)
     result.moveToFirst()
-    food = Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED)
+    while (!result.isAfterLast){
+        foodsList.add(Food(result.getString(1),result.getString(3),result.getInt(4),result.getInt(5),result.getInt(6), result.getInt(7), FOODTYPE.USERDEFINED))
+        result.moveToNext()
+    }
     result.close()
     dataBase.close()
-    return food
+    return foodsList
 }
 
 //添加食品，成功返回1，若食品名已存在返回0

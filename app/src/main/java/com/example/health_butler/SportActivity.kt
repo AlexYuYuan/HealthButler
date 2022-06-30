@@ -176,11 +176,11 @@ class SportActivity : Fragment() {
                     // 修改运动状态
                     if(isChecked) {
                         Toast.makeText(context,"turns on at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName, dateI,true)// 更新数据库
+                        upSportData(sportName,true)// 更新数据库
                     }
                     else {
                         Toast.makeText(context,"turns off at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName, dateI,false)// 更新数据库
+                        upSportData(sportName,false)// 更新数据库
                     }
                 }
             }

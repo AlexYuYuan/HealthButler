@@ -1,10 +1,13 @@
 package com.example.health_butler
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,11 +26,15 @@ class FoodSelectActivity : AppCompatActivity(){
         val context = this
         var foodData: LinkedList<Food> = queryAllFoods()
         val foodAdapter = FoodAdapter(foodData)
+        val search = findViewById<ImageView>(R.id.search)
+        val searchInput = findViewById<EditText>(R.id.searchInput)
         val recyclerView = findViewById<RecyclerView>(R.id.foodList)
         val addButton = findViewById<Button>(R.id.addFood)
         val allFood = findViewById<TextView>(R.id.all)
         val commonFood = findViewById<TextView>(R.id.common)
         val userDefinedFood = findViewById<TextView>(R.id.userDefined)
+        allFood.setBackgroundColor(Color.GRAY)
+        allFood.setTextColor(Color.WHITE)
 
         foodAdapter.setOnItemClickListener(object : OnItemClickListener {
             override fun onItemClick(position: Int) {
@@ -43,22 +50,51 @@ class FoodSelectActivity : AppCompatActivity(){
 
         })
 
+        search.setOnClickListener {
+            foodData = queryFood(searchInput.text.toString().trim())
+            recyclerView.adapter = FoodAdapter(foodData)
+            allFood.setBackgroundColor(Color.WHITE)
+            allFood.setTextColor(Color.GRAY)
+            commonFood.setBackgroundColor(Color.WHITE)
+            commonFood.setTextColor(Color.GRAY)
+            userDefinedFood.setBackgroundColor(Color.WHITE)
+            userDefinedFood.setTextColor(Color.GRAY)
+        }
+
         addButton.setOnClickListener {
             AddFoodDialog(context).show()
         }
 
         allFood.setOnClickListener {
             foodData = queryAllFoods()
+            allFood.setBackgroundColor(Color.GRAY)
+            allFood.setTextColor(Color.WHITE)
+            commonFood.setBackgroundColor(Color.WHITE)
+            commonFood.setTextColor(Color.GRAY)
+            userDefinedFood.setBackgroundColor(Color.WHITE)
+            userDefinedFood.setTextColor(Color.GRAY)
             recyclerView.adapter = FoodAdapter(foodData)
         }
 
         commonFood.setOnClickListener {
             foodData = queryFoodsByType(FOODTYPE.COMMON)
+            allFood.setBackgroundColor(Color.WHITE)
+            allFood.setTextColor(Color.GRAY)
+            commonFood.setBackgroundColor(Color.GRAY)
+            commonFood.setTextColor(Color.WHITE)
+            userDefinedFood.setBackgroundColor(Color.WHITE)
+            userDefinedFood.setTextColor(Color.GRAY)
             recyclerView.adapter = FoodAdapter(foodData)
         }
 
         userDefinedFood.setOnClickListener {
             foodData = queryFoodsByType(FOODTYPE.USERDEFINED)
+            allFood.setBackgroundColor(Color.WHITE)
+            allFood.setTextColor(Color.GRAY)
+            commonFood.setBackgroundColor(Color.WHITE)
+            commonFood.setTextColor(Color.GRAY)
+            userDefinedFood.setBackgroundColor(Color.GRAY)
+            userDefinedFood.setTextColor(Color.WHITE)
             recyclerView.adapter = FoodAdapter(foodData)
         }
 

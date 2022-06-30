@@ -66,7 +66,7 @@ class DataBaseHelper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("ALTER TABLE clock ADD COLUMN state Int default 1")
+        db?.execSQL("ALTER TABLE sport_record ADD COLUMN state int not null default 1")
     }
 
 }

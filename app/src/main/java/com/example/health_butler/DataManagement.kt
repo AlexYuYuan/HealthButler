@@ -452,13 +452,20 @@ fun queryDrinkRecords(date: Int): DrinkRecord?{
     return null
 }
 
-//新增饮水记录
+//新增/更新饮水记录
 fun insertDrinkRecord(drinkRecord: DrinkRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
-    contentValues.put("date", drinkRecord.date)
-    contentValues.put("volume", drinkRecord.volume)
-    dataBase.insert("drink_records", null, contentValues)
+    val result = dataBase.query("drink_records", null, "date = ?", arrayOf(getDate().toString()), null, null, null)
+    if (result.count == 0) {
+        contentValues.put("date", drinkRecord.date)
+        contentValues.put("volume", drinkRecord.volume)
+        dataBase.insert("drink_records", null, contentValues)
+    }
+    else{
+        contentValues.put("volume", drinkRecord.volume + result.getInt(1))
+        dataBase.update("drink_records", contentValues, "date = ?", arrayOf(getDate().toString()))
+    }
     dataBase.close()
 }
 
@@ -552,11 +559,32 @@ fun insertClock(clock: AlarmClock){
     dataBase.close()
 }
 
+//查询闹钟
+fun queryClock(): LinkedList<AlarmClock>{
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    val clockList = LinkedList<AlarmClock>()
+    val result = dataBase.query("clock", null, null, null, null, null, null)
+    result.moveToFirst()
+    while (!result.isAfterLast){
+        if (result.getInt(1) == 1)
+            clockList.add(AlarmClock(result.getString(0), true))
+        else
+            clockList.add(AlarmClock(result.getString(0), false))
+        result.moveToNext()
+    }
+    result.close()
+    dataBase.close()
+    return clockList
+}
+
 //更新闹钟状态
 fun upDataClock(clock: AlarmClock){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
-    contentValues.put("state", clock.state)
+    if (clock.state)
+        contentValues.put("state", 1)
+    else
+        contentValues.put("state", 0)
     dataBase.update("clock", contentValues, "time = ?", arrayOf(clock.time))
     dataBase.close()
 }

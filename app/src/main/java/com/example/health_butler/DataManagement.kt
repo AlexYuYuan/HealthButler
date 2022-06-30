@@ -444,7 +444,7 @@ fun queryDrinkRecords(date: Int): DrinkRecord?{
     val result = dataBase.query("drink_records", null, "date = ?", arrayOf(date.toString()), null, null, null)
     if (result.count != 0) {
         result.moveToFirst()
-        drinkRecords = DrinkRecord(result.getInt(0), result.getInt(1))
+        drinkRecords = DrinkRecord(result.getInt(0), result.getInt(1), result.getInt(2))
         return drinkRecords
     }
     result.close()
@@ -467,13 +467,16 @@ fun insertDrinkRecord(drinkRecord: DrinkRecord){
 fun upDataDrinkRecord(volume: Int){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
-    if(dataBase.query("drink_records", null, "date = ?", arrayOf(getDate().toString()), null, null, null).count == 0)
-        insertDrinkRecord(DrinkRecord(getDate(), volume))
+    val result = dataBase.query("drink_records", null, "date = ?", arrayOf(getDate().toString()), null, null, null)
+    if(result.count == 0)
+        insertDrinkRecord(DrinkRecord(getDate(), volume, getWaterGoal()))
     else {
-        contentValues.put("volume", volume)
+        result.moveToFirst()
+        contentValues.put("volume", volume + result.getInt(1))
         contentValues.put("goal", getWaterGoal())
         dataBase.update("drink_records", contentValues, "date = ?", arrayOf(getDate().toString()))
     }
+    result.close()
     dataBase.close()
 }
 

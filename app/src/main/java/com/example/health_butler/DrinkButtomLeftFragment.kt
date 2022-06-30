@@ -28,7 +28,12 @@ class DrinkButtomLeftFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_drink_buttom_left, container, false)
         parentFragmentManager.setFragmentResultListener("type", this, { requestKey, result ->
             //事件处理
-
+            val date = result.getString("date")
+            val drinkRecord = queryDrinkRecords(date!!.toInt())
+            if(drinkRecord != null){
+                targetDrinking = drinkRecord.goal
+                currentDrinking = drinkRecord.volume
+            }
         })
         return view
     }
@@ -81,9 +86,10 @@ class DrinkButtomLeftFragment : Fragment() {
                 total_drinking.text = targetDrinking.toString() + " ml"
             }
             else if (num == 1) {
+                val tem = currentDrinking
                 currentDrinking = setDrinking?.text.toString().toInt()
                 upDataDrinkRecord(currentDrinking)
-                current_drinking.text = currentDrinking.toString()
+                current_drinking.text = (currentDrinking + tem).toString()
             }
             updateProgress()
             dialog.dismiss()

@@ -47,7 +47,7 @@ data class Weight(val date: Int, val weight:Double, val fatRate: Double){
 
 data class Sport(val name:String, val time:Int)
 
-data class DrinkRecord(val date: Int, val volume: Int)
+data class DrinkRecord(val date: Int, val volume: Int, val goal: Int)
 
 data class SportRecord(val date: Int, val sportName: String, val time: Int, val state: Boolean){
     //返回格式化运动记录日期

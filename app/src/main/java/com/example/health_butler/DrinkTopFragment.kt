@@ -23,26 +23,24 @@ class DrinkTopFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_drink_top, container, false)
 
-        val beforeButton = view.findViewById<ImageView>(R.id.iv_calendar_previous)
-        val nextButton = view.findViewById<ImageView>(R.id.iv_calendar_next)
-
-        beforeButton.setOnClickListener {
-            parentFragmentManager.setFragmentResult("type", Bundle().apply {
-                putString("type","before")
-            })
-        }
-
-        nextButton.setOnClickListener {
-            parentFragmentManager.setFragmentResult("type", Bundle().apply {
-                putString("type","right")
-            })
-        }
-
         return view
     }
 
 
-//    override fun onActivityCreated(savedInstanceState: Bundle?) {
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        iv_calendar_previous.setOnClickListener {
+            parentFragmentManager.setFragmentResult("type", Bundle().apply {
+                putString("date", getDate().toString())
+            })
+        }
+
+        iv_calendar_next.setOnClickListener {
+            parentFragmentManager.setFragmentResult("type", Bundle().apply {
+                putString("date", getDate().toString())
+            })
+        }
 //        super.onActivityCreated(savedInstanceState)
 //
 //        tv_date.text = params1[i]
@@ -69,5 +67,5 @@ class DrinkTopFragment : Fragment() {
 //            transaction?.replace(R.id.buttom_layout, DrinkButtomRightFragment())
 //            transaction?.commit()
 //        }
-//    }
+    }
 }

@@ -65,7 +65,9 @@ class DataBaseHelper(
                 "state boolean not null default 0)")
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {}
+    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
+        db?.execSQL("ALTER TABLE clock ADD COLUMN state Int default 1")
+    }
 
 }
 
@@ -82,7 +84,7 @@ class MyApplication : Application() {
 
 //数据库对象以单例模式运行
 class SingleDataBase private constructor() {
-    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 1, null)
+    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 2, null)
     companion object {
         private var instance: SingleDataBase? = null
             get() {
@@ -244,46 +246,6 @@ fun upSportData(name: String, date: Int, state: Boolean){
     }
 }
 
-//查询运动记录
-fun queryAllSportRecords(model: Int): LinkedList<SportRecord>{
-    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
-    val sportRecords = LinkedList<SportRecord>()
-    val now = LocalDate.now()
-    val calendar = Calendar.getInstance()
-    calendar.set(now.year, now.monthValue, now.dayOfMonth)
-    var nowUNIX: Int = (calendar.timeInMillis/1000) as Int
-    var begin = 0
-    var selection: Array<String> = arrayOf()
-    when(model){
-        0 -> {
-            begin = nowUNIX - 31536000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        1 -> {
-            begin = nowUNIX - 2592000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        2 -> {
-            begin = nowUNIX - 7776000
-            selection = arrayOf(begin.toString(), nowUNIX.toString())
-        }
-        3 -> {
-            selection = arrayOf("0", "2147483647")
-        }
-    }
-    val result = dataBase.query("sport_record as sr inner join sport as s", arrayOf("date", "sport_name", "calorie", "time"), "sr.sport_name = s.sport_name and date >= ? and date <= ?", selection, null, null, "date")
-    dataBase.close()
-    result.moveToFirst()
-    while (!result.isAfterLast){
-        sportRecords.add(SportRecord(result.getInt(0), result.getString(1), result.getInt(3)))
-        result.moveToNext()
-    }
-    result.close()
-    return sportRecords
-}
-
-
-
 //新增运动记录
 fun insertSportRecord(sportRecord: SportRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
@@ -292,6 +254,10 @@ fun insertSportRecord(sportRecord: SportRecord){
     contentValues.put("date", sportRecord.date)
     contentValues.put("sport_name", sportRecord.sportName)
     contentValues.put("time", sportRecord.time)
+    if (sportRecord.state)
+        contentValues.put("state", 1)
+    else
+        contentValues.put("state", 0)
     dataBase.insert("sport_record", null, contentValues)
 
     dataBase.close()
@@ -329,7 +295,7 @@ fun querySport(): LinkedList<SportShow>{
         if(record.count == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
             Log.v("aaa","eee")
-            insertSportRecord(SportRecord(getDate(), result.getString(0), 0))
+            insertSportRecord(SportRecord(getDate(), result.getString(0), 0, false))
         }
         //如果运动记录时间为0则运动状态为未完成
         else{
@@ -357,11 +323,11 @@ fun querySportRecordByDate(date: Int): LinkedList<SportShow>{
     result.moveToFirst()
     var state: Boolean
     while (!result.isAfterLast) {
-        if (result.getInt(2) == 0)
+        if (result.getInt(4) == 0)
             state = false
         else
             state = true
-        sportShowList.add(SportShow(result.getString(1), result.getInt(2), state))
+        sportShowList.add(SportShow(result.getString(2), result.getInt(3), state))
         result.moveToNext()
     }
     result.close()

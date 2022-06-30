@@ -49,7 +49,7 @@ data class Sport(val name:String, val time:Int)
 
 data class DrinkRecord(val date: Int, val volume: Int)
 
-data class SportRecord(val date: Int, val sportName: String, val time: Int){
+data class SportRecord(val date: Int, val sportName: String, val time: Int, val state: Boolean){
     //返回格式化运动记录日期
     fun getDateFormat(): String{
         return SimpleDateFormat("YYYY年MM月DD日", Locale.getDefault()).format(date.toLong() * 1000)

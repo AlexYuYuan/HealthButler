@@ -231,18 +231,18 @@ fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
 }
 
 //更新运动完成状态
-fun upSportData(name: String, date: Int, state: Boolean){
+fun upSportData(name: String, state: Boolean){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
     if(state){
         val result = dataBase.query("sport", null, "sport_name = ?", arrayOf(name), null, null, null)
         result.moveToFirst()
         contentValues.put("state", 1)
-        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, date.toString()))
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
     }
     else{
-        contentValues.put("time", 0)
-        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, date.toString()))
+        contentValues.put("state", 0)
+        dataBase.update("sport_record", contentValues, "sport_name = ? and date = ?", arrayOf(name, getDate().toString()))
     }
 }
 
@@ -300,7 +300,7 @@ fun querySport(): LinkedList<SportShow>{
         //如果运动记录时间为0则运动状态为未完成
         else{
             record.moveToFirst()
-            if(record.getInt(3) == 0) {
+            if(record.getInt(4) == 0) {
                 sportList.add(SportShow(result.getString(0), result.getInt(1), false))
             }
             else

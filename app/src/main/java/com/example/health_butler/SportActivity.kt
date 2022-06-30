@@ -15,11 +15,14 @@ import kotlin.collections.ArrayList
 
 class SportActivity : Fragment() {
 
-    val params1 = arrayOf("one", "two", "three")
-    var i : Int = params1.size - 1
+    var i : Int = 0
+    var dateI : Int = getDate() + i * 86400
+    var dateS : String = getDateFormat(dateI)
 
 //    private val sports = ArrayList<Sports>()
     private var sportList : LinkedList<SportShow> = querySport()
+
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,30 +35,44 @@ class SportActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        tv_date.text = params1[i]
+        var adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
+        showSportData.adapter = adapter
+
+        tv_date.text = "今天"
 
         iv_calendar_next.setOnClickListener {
-            if (i < params1.size - 1) {
-                i++
+            i++
+            dateI = getDate() + i * 86400
+            dateS = getDateFormat(dateI)
+            if (i == 0) {
+                dateS = "今天"
+                sportList = querySport()
             }
-            tv_date.text = params1[i]
+            if (i != 0) {
+                sportList = querySportRecordByDate(dateI)
+            }
+            adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
+            showSportData.adapter = adapter
+            tv_date.text = dateS
         }
         iv_calendar_previous.setOnClickListener {
-            if (i > 0) {
-                i--
+            i--
+            dateI = getDate() + i * 86400
+            dateS = getDateFormat(dateI)
+            if (i == 0) {
+                dateS = "今天"
+                sportList = querySport()
             }
-            tv_date.text = params1[i]
+            if (i != 0) {
+                sportList = querySportRecordByDate(dateI)
+            }
+            adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
+            showSportData.adapter = adapter
+            tv_date.text = dateS
         }
-
-//        completed.text = "30"
-//        total_sportTime.text = "70"
-//        progr = Math.floor((30.0 / 70) * 100).toInt()
 
         updateProgress()
 
-
-        val adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
-        showSportData.adapter = adapter
 
         addSport.setOnClickListener {
             showDialog()  // 显示对话框
@@ -125,7 +142,7 @@ class SportActivity : Fragment() {
         dialog.show()
     }
 
-    class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
+    inner class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
 
         inner class ViewHolder(val sportName: TextView, val sportTime : TextView, val isComplete: CheckBox)
 
@@ -159,11 +176,11 @@ class SportActivity : Fragment() {
                     // 修改运动状态
                     if(isChecked) {
                         Toast.makeText(context,"turns on at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName, true)// 更新数据库
+                        upSportData(sportName, dateI,true)// 更新数据库
                     }
                     else {
                         Toast.makeText(context,"turns off at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName, false)// 更新数据库
+                        upSportData(sportName, dateI,false)// 更新数据库
                     }
                 }
             }

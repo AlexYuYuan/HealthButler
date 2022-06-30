@@ -350,7 +350,7 @@ fun querySport(): LinkedList<SportShow>{
 }
 
 //按日期查询运动记录
-fun querySportRecordByDate(date: Int): List<SportShow>{
+fun querySportRecordByDate(date: Int): LinkedList<SportShow>{
     val sportShowList = LinkedList<SportShow>()
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val result = dataBase.query("sport_record", null, "date = ?", arrayOf(date.toString()), null, null, null)

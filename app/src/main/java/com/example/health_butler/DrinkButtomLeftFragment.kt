@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
 
 class DrinkButtomLeftFragment : Fragment() {
 
-    private var progr = 0
     private var targetDrinking = 0   // 目标饮水量
     private var currentDrinking = 0   // 目前饮水量
 
@@ -33,7 +32,17 @@ class DrinkButtomLeftFragment : Fragment() {
 
         targetDrinking = getWaterGoal()
         total_drinking.text = targetDrinking.toString() + " ml"
-//        current_drinking.text = queryDrinkRecords(getDate()).toString()
+        var res = queryDrinkRecords(getDate())
+
+        if (res == null) {
+            current_drinking.text = currentDrinking.toString()
+        }
+        else {
+            current_drinking.text = res.volume.toString()
+            currentDrinking = res.volume
+        }
+
+        updateProgress()
 
         drinking_target.setOnClickListener {
             showDialog(0)
@@ -41,6 +50,13 @@ class DrinkButtomLeftFragment : Fragment() {
         add.setOnClickListener {
             showDialog(1)
         }
+    }
+
+    private fun updateProgress() {
+        var target : Double = targetDrinking.toDouble()
+        var current : Double = currentDrinking.toDouble()
+        var progr = Math.floor((current / target) * 100).toInt()
+        drink_progress_bar.progress = progr
     }
 
     fun showDialog(num : Int) {
@@ -62,12 +78,9 @@ class DrinkButtomLeftFragment : Fragment() {
                 upDataDrinkRecord(currentDrinking)
                 current_drinking.text = currentDrinking.toString()
             }
+            updateProgress()
             dialog.dismiss()
         }
         dialog.show()
-    }
-
-    private fun updateProgressBar() {
-        drink_progress_bar.progress = progr
     }
 }

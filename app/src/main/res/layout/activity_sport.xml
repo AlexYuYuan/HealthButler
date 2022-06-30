@@ -58,7 +58,7 @@
         android:background="#fff">
 
         <LinearLayout
-            android:layout_width="180dp"
+            android:layout_width="200dp"
             android:layout_height="180dp"
             android:orientation="vertical">
             <TextView
@@ -73,7 +73,7 @@
                 android:textColor="#000"
                 android:background="@drawable/textview_background_sporttime"/>
             <LinearLayout
-                android:layout_width="155dp"
+                android:layout_width="170dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
@@ -97,7 +97,7 @@
                     android:layout_marginTop="8dp"/>
                 <TextView
                     android:id="@+id/total_sportTime"
-                    android:layout_width="65dp"
+                    android:layout_width="75dp"
                     android:layout_height="30dp"
                     android:textColor="#919191"
                     android:text="60分钟"
@@ -112,7 +112,7 @@
             android:progressDrawable="@drawable/sporttime_circle"
             android:layout_width="180dp"
             android:layout_height="180dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:progress="60" />
     </LinearLayout>
 

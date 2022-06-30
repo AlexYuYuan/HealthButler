@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_sport.*
 import kotlinx.android.synthetic.main.buttom_setdrinking_dialog.*
 import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
 
-class DrinkButtomLeftFragment : Fragment() {
+class DrinkButtomLeftFragment() : Fragment() {
 
     private var targetDrinking = 0   // 目标饮水量
     private var currentDrinking = 0   // 目前饮水量

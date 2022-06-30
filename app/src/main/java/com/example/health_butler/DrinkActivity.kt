@@ -12,8 +12,9 @@ import kotlinx.android.synthetic.main.fragment_drink_top.*
 
 class DrinkActivity : Fragment() {
 
-    val params1 = arrayOf("one", "two", "three")
-    var i : Int = params1.size - 1
+    var i : Int = 0
+    var dateI : Int = getDate() + i * 86400
+    var dateS : String = getDateFormat(dateI)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,19 +28,25 @@ class DrinkActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        tv_date.text = params1[i]
+        tv_date.text = "今天"
 
         iv_calendar_next.setOnClickListener {
-            if (i < params1.size - 1) {
-                i++
+            i++
+            dateI = getDate() + i * 86400
+            dateS = getDateFormat(dateI)
+            if (i == 0) {
+                dateS = "今天"
             }
-            tv_date.text = params1[i]
+            tv_date.text = dateS
         }
         iv_calendar_previous.setOnClickListener {
-            if (i > 0) {
-                i--
+            i--
+            dateI = getDate() + i * 86400
+            dateS = getDateFormat(dateI)
+            if (i == 0) {
+                dateS = "今天"
             }
-            tv_date.text = params1[i]
+            tv_date.text = dateS
         }
 
         drinkWater.setOnClickListener {

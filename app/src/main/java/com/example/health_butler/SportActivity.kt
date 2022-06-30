@@ -3,15 +3,11 @@ package com.example.health_butler
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import android.os.strictmode.CredentialProtectedWhileLockedViolation
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_sport.*
 import java.util.*
-import kotlin.collections.ArrayList
 
 class SportActivity : Fragment() {
 
@@ -21,7 +17,7 @@ class SportActivity : Fragment() {
 
 //    private val sports = ArrayList<Sports>()
     private var sportList : LinkedList<SportShow> = querySport()
-
+    var adapter : MyListAdapter? = null
 
 
     override fun onCreateView(
@@ -35,7 +31,7 @@ class SportActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        var adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
+        adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)// listview适配器
         showSportData.adapter = adapter
 
         tv_date.text = "今天"
@@ -44,6 +40,7 @@ class SportActivity : Fragment() {
             i++
             dateI = getDate() + i * 86400
             dateS = getDateFormat(dateI)
+            sportList.clear()
             if (i == 0) {
                 dateS = "今天"
                 sportList = querySport()
@@ -59,6 +56,7 @@ class SportActivity : Fragment() {
             i--
             dateI = getDate() + i * 86400
             dateS = getDateFormat(dateI)
+            sportList.clear()
             if (i == 0) {
                 dateS = "今天"
                 sportList = querySport()
@@ -131,6 +129,7 @@ class SportActivity : Fragment() {
                 if (flag == 1) {
                     Toast.makeText(context, "Successfully added", Toast.LENGTH_LONG).show()
                     sportList.add(SportShow(name, time, isComplete))
+                    adapter?.notifyDataSetChanged()
                     updateProgress()
                 }
                 else if (flag == 0) {
@@ -142,7 +141,7 @@ class SportActivity : Fragment() {
         dialog.show()
     }
 
-    inner class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
+     inner class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
 
         inner class ViewHolder(val sportName: TextView, val sportTime : TextView, val isComplete: CheckBox)
 
@@ -176,11 +175,15 @@ class SportActivity : Fragment() {
                     // 修改运动状态
                     if(isChecked) {
                         Toast.makeText(context,"turns on at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName,true)// 更新数据库
+                        upSportData(sportName, true)// 更新数据库
+                        sportList.get(position).state = true
+                        updateProgress()
                     }
                     else {
                         Toast.makeText(context,"turns off at $sportName", Toast.LENGTH_LONG).show()
-                        upSportData(sportName,false)// 更新数据库
+                        upSportData(sportName, false)// 更新数据库
+                        sportList.get(position).state = false
+                        updateProgress()
                     }
                 }
             }

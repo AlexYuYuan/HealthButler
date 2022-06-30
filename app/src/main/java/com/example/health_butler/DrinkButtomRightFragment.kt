@@ -12,11 +12,14 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_drink_buttom_right.*
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class DrinkButtomRightFragment : Fragment() {
 
     private val times = ArrayList<Time>()
+    private val clockList : LinkedList<AlarmClock> = queryClock()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,9 +32,8 @@ class DrinkButtomRightFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        initTimes()   // 初始化时间列表
 
-        val adapter = MyListAdapter(this.requireContext(), R.layout.time_item, times)   // listview适配器
+        val adapter = MyListAdapter(this.requireContext(), R.layout.time_item, clockList)   // listview适配器
         showData.adapter = adapter
 
 
@@ -80,8 +82,8 @@ class DrinkButtomRightFragment : Fragment() {
                     else {
                         minuteS = "$i1"
                     }
-                                                      // 更新数据库
-                    times.add(Time("$hourS:$minuteS", false))   // 更新时间列表
+                    insertClock(AlarmClock("$hourS:$minuteS", false))// 更新数据库
+                    clockList.add(AlarmClock("$hourS:$minuteS", false))   // 更新时间列表
                     adapter.notifyDataSetChanged()   // 更新列表
                 }, hourOfDay, minute, is24HourView
             )
@@ -90,13 +92,10 @@ class DrinkButtomRightFragment : Fragment() {
             _timePickerDialog.show()
         }
 
-        // 长按删除条目
-
-
     }
 
     // 继承adapter类，自定义列表
-    private class MyListAdapter(val activity: Context, val resourceID: Int, data: List<Time>) : ArrayAdapter<Time>(activity, resourceID, data) {
+    private class MyListAdapter(val activity: Context, val resourceID: Int, data: List<AlarmClock>) : ArrayAdapter<AlarmClock>(activity, resourceID, data) {
 
         inner class ViewHolder(val timeList: TextView, val switch1: Switch)
 
@@ -121,16 +120,16 @@ class DrinkButtomRightFragment : Fragment() {
             if (timesList != null) {
                 var time = timesList.time
                 viewHolder.timeList.text = time   // 设置控件
-                viewHolder.switch1.isChecked = timesList.isTurnOn   // 设置闹钟状态
+                viewHolder.switch1.isChecked = timesList.state   // 设置闹钟状态
                 viewHolder.switch1.setOnCheckedChangeListener { buttonView, isChecked ->
                     // 修改闹钟状态
                     if(isChecked) {
                         Toast.makeText(context,"The alarm clock turns on at $time",Toast.LENGTH_LONG).show()
-                        // 更新数据库
+                        upDataClock(AlarmClock(time, true))// 更新数据库
                     }
                     else {
                         Toast.makeText(context,"The alarm clock turns off at $time",Toast.LENGTH_LONG).show()
-                        // 更新数据库
+                        upDataClock(AlarmClock(time, false))// 更新数据库
                     }
                 }
             }
@@ -147,13 +146,6 @@ class DrinkButtomRightFragment : Fragment() {
 
             return view
         }
-    }
-
-    // 测试例子
-    private fun initTimes() {
-        times.add(Time("17:00", true))
-        times.add(Time("19:00", false))
-        times.add(Time("20:00", true))
     }
 
 }

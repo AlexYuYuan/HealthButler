@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 //    val params1 = arrayOf("one", "two", "three")
 //    var i : Int = params1.size - 1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         frag.commit()
     }
 
+
 //    private fun updateProgressBar() {
 //        var progress_bar : ProgressBar = findViewById(R.id.progress_bar)
 //        progress_bar.progress = progr
@@ -83,4 +85,5 @@ class MainActivity : AppCompatActivity() {
 //        var text_view_progress : TextView = findViewById(R.id.text_view_progress)
 //        text_view_progress.text = "$progr%"
 //    }
+
 }

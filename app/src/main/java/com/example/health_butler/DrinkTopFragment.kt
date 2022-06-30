@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
@@ -20,8 +21,27 @@ class DrinkTopFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drink_top, container, false)
+        val view = inflater.inflate(R.layout.fragment_drink_top, container, false)
+
+        val beforeButton = view.findViewById<ImageView>(R.id.iv_calendar_previous)
+        val nextButton = view.findViewById<ImageView>(R.id.iv_calendar_next)
+
+        beforeButton.setOnClickListener {
+            parentFragmentManager.setFragmentResult("type", Bundle().apply {
+                putString("type","before")
+            })
+        }
+
+        nextButton.setOnClickListener {
+            parentFragmentManager.setFragmentResult("type", Bundle().apply {
+                putString("type","right")
+            })
+        }
+
+        return view
     }
+
+
 //    override fun onActivityCreated(savedInstanceState: Bundle?) {
 //        super.onActivityCreated(savedInstanceState)
 //

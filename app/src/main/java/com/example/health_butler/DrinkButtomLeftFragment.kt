@@ -19,14 +19,20 @@ class DrinkButtomLeftFragment : Fragment() {
     private var targetDrinking = 0   // 目标饮水量
     private var currentDrinking = 0   // 目前饮水量
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_drink_buttom_left, container, false)
+        parentFragmentManager.setFragmentResultListener("type", this, { requestKey, result ->
+            //事件处理
+
+        })
         return view
     }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -51,6 +57,7 @@ class DrinkButtomLeftFragment : Fragment() {
             showDialog(1)
         }
     }
+
 
     private fun updateProgress() {
         var target : Double = targetDrinking.toDouble()

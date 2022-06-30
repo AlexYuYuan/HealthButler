@@ -66,7 +66,7 @@ class DataBaseHelper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("ALTER TABLE sport_record ADD COLUMN state int not null default 1")
+        db?.execSQL("ALTER TABLE drink_records ADD COLUMN goal int not null default 2000")
     }
 
 }
@@ -452,23 +452,18 @@ fun queryDrinkRecords(date: Int): DrinkRecord?{
     return null
 }
 
-//新增/更新饮水记录
+//新增饮水记录
 fun insertDrinkRecord(drinkRecord: DrinkRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
-    val result = dataBase.query("drink_records", null, "date = ?", arrayOf(getDate().toString()), null, null, null)
-    if (result.count == 0) {
-        contentValues.put("date", drinkRecord.date)
-        contentValues.put("volume", drinkRecord.volume)
-        dataBase.insert("drink_records", null, contentValues)
-    }
-    else{
-        contentValues.put("volume", drinkRecord.volume + result.getInt(1))
-        dataBase.update("drink_records", contentValues, "date = ?", arrayOf(getDate().toString()))
-    }
+    contentValues.put("date", drinkRecord.date)
+    contentValues.put("volume", drinkRecord.volume)
+    dataBase.insert("drink_records", null, contentValues)
+
     dataBase.close()
 }
 
+//更新饮水记录
 fun upDataDrinkRecord(volume: Int){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
@@ -476,6 +471,7 @@ fun upDataDrinkRecord(volume: Int){
         insertDrinkRecord(DrinkRecord(getDate(), volume))
     else {
         contentValues.put("volume", volume)
+        contentValues.put("goal", getWaterGoal())
         dataBase.update("drink_records", contentValues, "date = ?", arrayOf(getDate().toString()))
     }
     dataBase.close()

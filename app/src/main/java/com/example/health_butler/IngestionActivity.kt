@@ -60,18 +60,11 @@ class IngestionActivity : Fragment(){
 
 
 
-        addBreakfast.setOnClickListener {
+        addRecipes.setOnClickListener {
             val intent = Intent(activity, FoodSelectActivity::class.java)
             startActivity(intent)
         }
 
-        addLunch.setOnClickListener {
-
-        }
-
-        addDinner.setOnClickListener {
-
-        }
 
 //        progr = 70
 

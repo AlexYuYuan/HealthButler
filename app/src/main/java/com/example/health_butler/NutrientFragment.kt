@@ -52,23 +52,38 @@ class NutrientFragment : Fragment() {
             transaction?.commit()
         }
 
-        parentFragmentManager.setFragmentResultListener("changeIngestion", this, FragmentResultListener { requestKey, result ->
-            //事件处理
-            val date = result.getString("date")
+        fun updateChart_view(date: String){
             val dietRecord = queryDietRecord(date!!.toInt())
             if (dietRecord != null) {
                 piechartentry.clear()
-                piechartentry.add( Entry(result.getFloat(1.toString()), 0 ))
-                piechartentry.add( Entry(result.getFloat(2.toString()), 1 ))
-                piechartentry.add( Entry(result.getFloat(3.toString()), 2 ))
+                piechartentry.add( Entry(dietRecord.carbohydrate.toFloat(), 0 ))
+                piechartentry.add( Entry(dietRecord.protein.toFloat(), 1 ))
+                piechartentry.add( Entry(dietRecord.fat.toFloat(), 2 ))
                 val data = PieData( xvalues,piedataset)
                 chart_view.setData(data)
+                chart_view.notifyDataSetChanged()
+                chart_view.invalidate()
+                nutrientTotalIntake.text = "三大营养素供能比例"
             }
             else{
-                ingestion_progress_bar.progress = 0
-                text_view_progress.text = "无记录"
-
+                piechartentry.clear()
+                piechartentry.add( Entry(0.0f, 0 ))
+                piechartentry.add( Entry(0.0f, 1 ))
+                piechartentry.add( Entry(0.0f, 2 ))
+                val data = PieData( xvalues,piedataset)
+                chart_view.setData(data)
+                chart_view.notifyDataSetChanged()
+                chart_view.invalidate()
+                nutrientTotalIntake.text = "三大营养素供能比例（无记录）"
             }
+        }
+
+        updateChart_view(getDate().toString())
+
+        parentFragmentManager.setFragmentResultListener("changeIngestion", this, FragmentResultListener { requestKey, result ->
+            //事件处理
+            val date = result.getString("date")
+            updateChart_view(date!!)
         })
     }
 }

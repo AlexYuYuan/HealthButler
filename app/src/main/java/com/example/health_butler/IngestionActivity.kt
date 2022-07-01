@@ -2,30 +2,16 @@ package com.example.health_butler
 
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentResultListener
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.activity_ingestion.*
 import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_next
 import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_previous
 import kotlinx.android.synthetic.main.activity_ingestion.tv_date
-import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
-import kotlinx.android.synthetic.main.fragment_drink_top.*
-import kotlinx.android.synthetic.main.fragment_ingestion.*
-import kotlinx.android.synthetic.main.fragment_ingestion.go_nutrient
-import kotlinx.android.synthetic.main.fragment_nutrient.*
-import kotlin.math.log
+
 
 
 class IngestionActivity : Fragment(){

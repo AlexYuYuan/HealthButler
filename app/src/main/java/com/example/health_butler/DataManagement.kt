@@ -191,11 +191,13 @@ fun insertDiet(dietRecord: DietRecord){
         contentValues.put("quantity", dietRecord.quantity)
         contentValues.put("foodName", dietRecord.foodName)
         contentValues.put("type", dietRecord.type.value)
-        dataBase.insert("diet_food", null, contentValues)
+        val state = dataBase.insert("diet_food", null, contentValues)
+        val i = state
     }
     else{
         contentValues.put("quantity", result.getInt(4)+dietRecord.quantity)
-        dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(food.name, dietRecord.date.toString()))
+        val state = dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(food.name, dietRecord.date.toString()))
+        val i = state
     }
     result.close()
     contentValues.clear()
@@ -208,24 +210,26 @@ fun insertDiet(dietRecord: DietRecord){
         contentValues.put("carbohydrate", (food.carbohydrate * dietRecord.quantity).toInt())
         contentValues.put("protein", (food.protein * dietRecord.quantity).toInt())
         contentValues.put("fat", (food.fat * dietRecord.quantity).toInt())
-        dataBase.insert("diet_food", null, contentValues)
+        val state = dataBase.insert("diet_food", null, contentValues)
+        val i = state
     }
     else{
         contentValues.put("calorie", result.getInt(1) + food.calorie * dietRecord.quantity)
         contentValues.put("carbohydrate", result.getInt(2) + food.carbohydrate * dietRecord.quantity)
         contentValues.put("protein", result.getInt(3) + food.protein * dietRecord.quantity)
         contentValues.put("fat", result.getInt(4) + food.fat * dietRecord.quantity)
-        dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.foodName, dietRecord.date.toString()))
+        val state = dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.foodName, dietRecord.date.toString()))
+        val i = state
     }
     result.close()
     dataBase.close()
 }
 
 //查询饮食食品记录
-fun queryDiet(date: Int, type: TYPE):LinkedList<DietShow>{
+fun queryDiet(date: Int):LinkedList<DietShow>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val dietFoods = LinkedList<DietShow>()
-    val result =  dataBase.query("diet_food", arrayOf("food_name", "quantity"), "date = ? and type = ?", arrayOf(date.toString(), type.ordinal.toString()), null, null, null)
+    val result =  dataBase.query("diet_food", arrayOf("food_name", "quantity"), "date = ?", arrayOf(date.toString()), null, null, null)
     while (!result.isAfterLast){
         var food = dataBase.query("food", arrayOf("unit"), "food_name = ?", arrayOf(result.getString(0)), null, null, null)
         food.moveToFirst()

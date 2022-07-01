@@ -10,10 +10,12 @@ import android.widget.EditText
 import android.widget.Toast
 import kotlinx.android.synthetic.main.number_select_dialog.*
 
-class AddFoodDialog(context: Context): Dialog(context) {
+class AddFoodDialog(context: Context, dialogListener: FoodSelectActivity.DialogListener): Dialog(context) {
 
+    val dialogListener:FoodSelectActivity.DialogListener = dialogListener
     init{
         setContentView(R.layout.add_food_dialog)
+
         window?.setGravity(Gravity.CENTER)
         window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
     }
@@ -60,6 +62,7 @@ class AddFoodDialog(context: Context): Dialog(context) {
                     inputList[4].toString().toInt(),
                     inputList[5].toString().toInt(),
                     FOODTYPE.COMMON))
+                dialogListener.refreshActivity("")
                 dismiss()
             }
         }

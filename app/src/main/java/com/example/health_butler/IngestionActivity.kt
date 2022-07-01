@@ -1,17 +1,37 @@
 package com.example.health_butler
 
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.activity_ingestion.*
 import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_next
 import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_previous
 import kotlinx.android.synthetic.main.activity_ingestion.tv_date
-
+import kotlinx.android.synthetic.main.activity_sport.*
+import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
+import kotlinx.android.synthetic.main.fragment_drink_top.*
+import kotlinx.android.synthetic.main.fragment_ingestion.*
+import kotlinx.android.synthetic.main.fragment_ingestion.go_nutrient
+import kotlinx.android.synthetic.main.fragment_nutrient.*
+import java.util.*
+import kotlin.math.log
 
 
 class IngestionActivity : Fragment(){
@@ -22,7 +42,8 @@ class IngestionActivity : Fragment(){
     var dateS : String = getDateFormat(dateI)
     var flag : Int = 0
 
-    
+    private var foodList : LinkedList<DietShow> = queryDiet(getDate())
+    var adapter : MyFoodAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +56,15 @@ class IngestionActivity : Fragment(){
         super.onActivityCreated(savedInstanceState)
 
         initFragmentView()
+
+        Log.v("aaa","${foodList.size}")
+//        for(i in 0 until foodList.size) {
+//            Log.v("aaa", "${foodList.get(i).name}")
+//            Log.v("aaa", "${foodList.get(i).num}")
+//            Log.v("aaa", "${foodList.get(i).unit}")
+//        }
+        adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)
+        showFoodData.adapter = adapter
 
         tv_date.text = "今天"
 
@@ -104,6 +134,30 @@ class IngestionActivity : Fragment(){
         val transaction = getChildFragmentManager().beginTransaction()
         transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
         transaction.commit()
+    }
+
+    inner class MyFoodAdapter(val activity: Context, val resourceID: Int, data: List<DietShow>) : ArrayAdapter<DietShow>(activity, resourceID, data) {
+
+        inner class ViewHolder(val foodName: TextView, val quantity : TextView, val unit: TextView)
+
+        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+
+            val view: View
+            val viewHolder: ViewHolder
+
+            if (convertView == null) {
+                view = LayoutInflater.from(context).inflate(resourceID, parent, false)
+                val foodName: TextView = view.findViewById(R.id.foodName)
+                val quantity : TextView = view.findViewById(R.id.quantity)
+                val unit: TextView = view.findViewById(R.id.unit)
+                viewHolder = ViewHolder(foodName, quantity, unit)
+                view.tag = viewHolder
+            } else {
+                view = convertView
+                viewHolder = view.tag as ViewHolder
+            }
+            return view
+        }
     }
 
 //    fun resetFlag(num : Int){

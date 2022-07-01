@@ -19,7 +19,7 @@
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/drawable/textview_background_sporttime.xml" value="0.1775" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_drink.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_food_select.xml" value="0.1" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_ingestion.xml" value="0.25364583333333335" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_ingestion.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_sport.xml" value="0.22237442922374429" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/activity_weightrecord.xml" value="0.2526041666666667" />
@@ -28,7 +28,7 @@
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/food_item.xml" value="0.11770833333333333" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_buttom_left.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_buttom_right.xml" value="0.2526041666666667" />
-        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_top.xml" value="0.14666666666666667" />
+        <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_drink_top.xml" value="0.1" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_ingestion.xml" value="0.18611111111111112" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/fragment_nutrient.xml" value="0.24974358974358973" />
         <entry key="..\:/AndroidStudioProjects/HealthButler/app/src/main/res/layout/number_select_dialog.xml" value="0.10815602836879433" />

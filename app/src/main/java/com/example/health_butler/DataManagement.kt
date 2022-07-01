@@ -297,7 +297,6 @@ fun querySport(): LinkedList<SportShow>{
         //如果运动记录不存在，运动状态为未完成且新增记录
         if(record.count == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
-            Log.v("aaa","eee")
             insertSportRecord(SportRecord(getDate(), result.getString(0), 0, false))
         }
         //如果运动记录时间为0则运动状态为未完成

@@ -13,7 +13,7 @@
         android:title="Drink"
         android:icon="@drawable/ic_baseline_local_drink_24"/>
 
-    <item android:id="@+id/weightRecord"
-        android:title="WeightRecord"
-        android:icon="@drawable/ic_baseline_book_24"/>
+<!--    <item android:id="@+id/weightRecord"-->
+<!--        android:title="WeightRecord"-->
+<!--        android:icon="@drawable/ic_baseline_book_24"/>-->
 </menu>

@@ -60,10 +60,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.weightRecord -> {
-                    setFragment(WeightRecordActivity())
-                    true
-                }
+//                R.id.weightRecord -> {
+//                    setFragment(WeightRecordActivity())
+//                    true
+//                }
 
                 else -> false
             }

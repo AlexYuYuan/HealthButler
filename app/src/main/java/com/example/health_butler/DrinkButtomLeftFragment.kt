@@ -90,10 +90,10 @@ class DrinkButtomLeftFragment() : Fragment() {
                 total_drinking.text = targetDrinking.toString() + " ml"
             }
             else if (num == 1) {
-                val tem = currentDrinking
-                currentDrinking = setDrinking?.text.toString().toInt()
-                upDataDrinkRecord(currentDrinking)
-                current_drinking.text = (currentDrinking + tem).toString()
+                val tem = setDrinking?.text.toString().toInt()
+                currentDrinking = currentDrinking + tem
+                upDataDrinkRecord(tem)
+                current_drinking.text = (currentDrinking).toString()
             }
             updateProgress()
             dialog.dismiss()

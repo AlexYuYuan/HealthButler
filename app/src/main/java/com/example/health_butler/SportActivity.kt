@@ -3,6 +3,7 @@ package com.example.health_butler
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -48,6 +49,7 @@ class SportActivity : Fragment() {
             if (i != 0) {
                 sportList = querySportRecordByDate(dateI)
             }
+            updateProgress()
             adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
             showSportData.adapter = adapter
             tv_date.text = dateS
@@ -64,6 +66,7 @@ class SportActivity : Fragment() {
             if (i != 0) {
                 sportList = querySportRecordByDate(dateI)
             }
+            updateProgress()
             adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
             showSportData.adapter = adapter
             tv_date.text = dateS

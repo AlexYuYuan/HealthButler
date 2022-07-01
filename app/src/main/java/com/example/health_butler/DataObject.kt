@@ -78,3 +78,5 @@ data class AlarmClock(val time: String, val state: Boolean)
 data class BodySize(val date: Int, val chest: Int, val waist: Int, val hip: Int)
 
 data class SportShow(val name:String, val time:Int, var state:Boolean)
+
+data class DietShow(val name: String, val num: Int, var unit: String)

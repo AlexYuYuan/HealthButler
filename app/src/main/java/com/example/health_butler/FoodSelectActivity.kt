@@ -25,7 +25,7 @@ class FoodSelectActivity : AppCompatActivity(){
 
         val context = this
         var foodData: LinkedList<Food> = queryAllFoods()
-        val foodAdapter = FoodAdapter(foodData)
+        var foodAdapter = FoodAdapter(foodData)
         val search = findViewById<ImageView>(R.id.search)
         val searchInput = findViewById<EditText>(R.id.searchInput)
         val recyclerView = findViewById<RecyclerView>(R.id.foodList)
@@ -36,23 +36,37 @@ class FoodSelectActivity : AppCompatActivity(){
         allFood.setBackgroundColor(Color.GRAY)
         allFood.setTextColor(Color.WHITE)
 
-        foodAdapter.setOnItemClickListener(object : OnItemClickListener {
-            override fun onItemClick(position: Int) {
-                NumberSelectDialog(context, foodData.get(position).name, foodData.get(position).unit, object : DialogListener {
-                    override fun refreshActivity(number: String) {
-                        insertDiet(DietRecord(getDate(),TYPE.LUNCH, foodData.get(position).name, number.toDouble()))
-                        foodData = queryAllFoods()
-                        recyclerView.adapter = FoodAdapter(foodData)
-                    }
-                }).show()
+        fun initRecyclerView(foodAdapter: FoodAdapter) {
+            foodAdapter.setOnItemClickListener(object : OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    NumberSelectDialog(
+                        context,
+                        foodData.get(position).name,
+                        foodData.get(position).unit,
+                        object : DialogListener {
+                            override fun refreshActivity(number: String) {
+                                insertDiet(
+                                    DietRecord(
+                                        getDate(),
+                                        TYPE.LUNCH,
+                                        foodData.get(position).name,
+                                        number.toDouble()
+                                    )
+                                )
+                            }
+                        }
+                    ).show()
+                }
+            })
+            recyclerView.adapter = foodAdapter
+        }
 
-            }
-
-        })
+        initRecyclerView(foodAdapter)
 
         search.setOnClickListener {
             foodData = queryFood(searchInput.text.toString().trim())
-            recyclerView.adapter = FoodAdapter(foodData)
+            foodAdapter = FoodAdapter(foodData)
+            initRecyclerView(foodAdapter)
             allFood.setBackgroundColor(Color.WHITE)
             allFood.setTextColor(Color.GRAY)
             commonFood.setBackgroundColor(Color.WHITE)
@@ -65,7 +79,8 @@ class FoodSelectActivity : AppCompatActivity(){
             AddFoodDialog(context, object: DialogListener{
                 override fun refreshActivity(number: String) {
                     foodData = queryAllFoods()
-                    recyclerView.adapter = FoodAdapter(foodData)
+                    foodAdapter = FoodAdapter(foodData)
+                    initRecyclerView(foodAdapter)
                 }
             }).show()
             allFood.setBackgroundColor(Color.GRAY)
@@ -84,7 +99,8 @@ class FoodSelectActivity : AppCompatActivity(){
             commonFood.setTextColor(Color.GRAY)
             userDefinedFood.setBackgroundColor(Color.WHITE)
             userDefinedFood.setTextColor(Color.GRAY)
-            recyclerView.adapter = FoodAdapter(foodData)
+            foodAdapter = FoodAdapter(foodData)
+            initRecyclerView(foodAdapter)
         }
 
         commonFood.setOnClickListener {
@@ -95,7 +111,8 @@ class FoodSelectActivity : AppCompatActivity(){
             commonFood.setTextColor(Color.WHITE)
             userDefinedFood.setBackgroundColor(Color.WHITE)
             userDefinedFood.setTextColor(Color.GRAY)
-            recyclerView.adapter = FoodAdapter(foodData)
+            foodAdapter = FoodAdapter(foodData)
+            initRecyclerView(foodAdapter)
         }
 
         userDefinedFood.setOnClickListener {
@@ -106,7 +123,8 @@ class FoodSelectActivity : AppCompatActivity(){
             commonFood.setTextColor(Color.GRAY)
             userDefinedFood.setBackgroundColor(Color.GRAY)
             userDefinedFood.setTextColor(Color.WHITE)
-            recyclerView.adapter = FoodAdapter(foodData)
+            foodAdapter = FoodAdapter(foodData)
+            initRecyclerView(foodAdapter)
         }
 
         if (recyclerView != null) {

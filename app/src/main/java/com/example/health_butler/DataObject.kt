@@ -80,3 +80,5 @@ data class BodySize(val date: Int, val chest: Int, val waist: Int, val hip: Int)
 data class SportShow(val name:String, val time:Int, var state:Boolean)
 
 data class DietShow(val name: String, val num: Int, var unit: String)
+
+data class RecordShow(val calorie: Int, val carbohydrate: Int, val protein: Int, val fat: Int)

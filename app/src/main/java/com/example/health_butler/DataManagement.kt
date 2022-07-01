@@ -222,15 +222,32 @@ fun insertDiet(dietRecord: DietRecord){
 }
 
 //查询饮食食品记录
-fun queryDiet(date: Int, type: TYPE):LinkedList<DietRecord>{
+fun queryDiet(date: Int, type: TYPE):LinkedList<DietShow>{
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
-    val dietFoods = LinkedList<DietRecord>()
+    val dietFoods = LinkedList<DietShow>()
     val result =  dataBase.query("diet_food", arrayOf("food_name", "quantity"), "date = ? and type = ?", arrayOf(date.toString(), type.ordinal.toString()), null, null, null)
-    dataBase.close()
     while (!result.isAfterLast){
-        dietFoods.add(DietRecord(date, type, result.getString(1),result.getDouble(2)))
+        var food = dataBase.query("food", arrayOf("unit"), "food_name = ?", arrayOf(result.getString(0)), null, null, null)
+        food.moveToFirst()
+        dietFoods.add(DietShow(result.getString(0), result.getInt(1), food.getString(0)))
+        food.close()
     }
+    result.close()
+    dataBase.close()
     return dietFoods
+}
+
+fun queryDietRecord(date:Int): RecordShow?{
+    val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
+    var dietRecord: RecordShow? = null
+    val result =  dataBase.query("diet_record", null, "date = ?", arrayOf(date.toString()), null, null, null)
+    if (result.count != 0){
+        result.moveToFirst()
+        dietRecord = RecordShow(result.getInt(1), result.getInt(2), result.getInt(3), result.getInt(4))
+    }
+    result.close()
+    dataBase.close()
+    return dietRecord
 }
 
 //更新运动完成状态

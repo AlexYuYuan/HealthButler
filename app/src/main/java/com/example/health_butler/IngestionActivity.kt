@@ -11,11 +11,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import kotlinx.android.synthetic.main.activity_ingestion.*
+import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_next
+import kotlinx.android.synthetic.main.activity_ingestion.iv_calendar_previous
+import kotlinx.android.synthetic.main.activity_ingestion.tv_date
+import kotlinx.android.synthetic.main.fragment_drink_buttom_left.*
+import kotlinx.android.synthetic.main.fragment_drink_top.*
 import kotlinx.android.synthetic.main.fragment_ingestion.*
 import kotlinx.android.synthetic.main.fragment_ingestion.go_nutrient
 import kotlinx.android.synthetic.main.fragment_nutrient.*
@@ -24,9 +30,10 @@ import kotlin.math.log
 
 class IngestionActivity : Fragment(){
     private var progr = 0
-    val params1 = arrayOf("one", "two", "three")
-    var i : Int = params1.size - 1
 
+    var i : Int = 0
+    var dateI : Int = getDate() + i * 86400
+    var dateS : String = getDateFormat(dateI)
     var flag : Int = 0
 
     
@@ -43,19 +50,39 @@ class IngestionActivity : Fragment(){
 
         initFragmentView()
 
-        tv_date.text = params1[i]
+        tv_date.text = "今天"
 
         iv_calendar_next.setOnClickListener {
-            if (i < params1.size - 1) {
-                i++
+            if (i == 0) {
+                dateS = "今天"
             }
-            tv_date.text = params1[i]
+            else{
+                i++
+                if(i == 0) {
+                    dateS = "今天"
+                    dateI = getDate() + i * 86400
+                }
+                else {
+                    dateI = getDate() + i * 86400
+                    dateS = getDateFormat(dateI)
+                }
+            }
+            tv_date.text = dateS
+            childFragmentManager.setFragmentResult("changeIngestion", Bundle().apply {
+                putString("date", dateI.toString())
+            })
         }
         iv_calendar_previous.setOnClickListener {
-            if (i > 0) {
-                i--
+            i--
+            dateI = getDate() + i * 86400
+            dateS = getDateFormat(dateI)
+            if (i == 0) {
+                dateS = "今天"
             }
-            tv_date.text = params1[i]
+            tv_date.text = dateS
+            childFragmentManager.setFragmentResult("changeIngestion", Bundle().apply {
+                putString("date", dateI.toString())
+            })
         }
 
 

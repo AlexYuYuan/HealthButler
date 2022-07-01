@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentResultListener
 import kotlinx.android.synthetic.main.fragment_ingestion.*
 
 class TotalIngestionFragment : Fragment() {
@@ -21,13 +22,30 @@ class TotalIngestionFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         var progr = 70
-        ingestion_progress_bar.progress = progr
-        text_view_progress.text = "$progr%"
+        fun updateBar(date: String) {
+            val dietRecord = queryDietRecord(date!!.toInt())
+            if (dietRecord != null) {
+                progr = (dietRecord.calorie / 2500) * 100
+                ingestion_progress_bar.progress = progr
+                text_view_progress.text = "$progr%"
+            } else {
+                ingestion_progress_bar.progress = 0
+                text_view_progress.text = "无记录"
+            }
+        }
+
+        updateBar(getDate().toString())
 
         go_nutrient.setOnClickListener {
             val transaction = getFragmentManager()?.beginTransaction()
             transaction?.replace(R.id.statistics_layout, NutrientFragment())
             transaction?.commit()
         }
+
+        parentFragmentManager.setFragmentResultListener("changeIngestion", this, FragmentResultListener { requestKey, result ->
+            //事件处理
+            val date = result.getString("date")
+            updateBar(date!!)
+        })
     }
 }

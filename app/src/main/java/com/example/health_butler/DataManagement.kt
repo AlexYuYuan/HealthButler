@@ -232,11 +232,13 @@ fun queryDiet(date: Int):LinkedList<DietShow>{
     val dietFoods = LinkedList<DietShow>()
     val result =  dataBase.query("diet_food", arrayOf("food_name", "quantity"), "date = ?", arrayOf(date.toString()), null, null, null)
     Log.v("ccc","${result.count}")
+    result.moveToFirst()
     while (!result.isAfterLast){
         var food = dataBase.query("food", arrayOf("unit"), "food_name = ?", arrayOf(result.getString(0)), null, null, null)
         food.moveToFirst()
         dietFoods.add(DietShow(result.getString(0), result.getInt(1), food.getString(0)))
         food.close()
+        result.moveToNext()
     }
     result.close()
     dataBase.close()

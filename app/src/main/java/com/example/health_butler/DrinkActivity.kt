@@ -12,9 +12,9 @@ import kotlinx.android.synthetic.main.fragment_drink_top.*
 
 class DrinkActivity : Fragment() {
 
-    var i : Int = 0
-    var dateI : Int = getDate() + i * 86400
-    var dateS : String = getDateFormat(dateI)
+//    var i : Int = 0
+//    var dateI : Int = getDate() + i * 86400
+//    var dateS : String = getDateFormat(dateI)
 
     override fun onCreateView(
         inflater: LayoutInflater,

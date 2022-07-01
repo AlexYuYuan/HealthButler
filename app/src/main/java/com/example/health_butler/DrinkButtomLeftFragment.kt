@@ -40,6 +40,8 @@ class DrinkButtomLeftFragment() : Fragment() {
             if(drinkRecord != null){
                 targetDrinking = drinkRecord.goal
                 currentDrinking = drinkRecord.volume
+                current_drinking.text = currentDrinking.toString()
+                updateProgress()
             }
         })
 

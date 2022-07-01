@@ -180,13 +180,13 @@ fun delUserDefinedFood(food: Food){
 fun insertDiet(dietRecord: DietRecord){
     val dataBase = SingleDataBase.get().dateBaseHelper.writableDatabase
     val contentValues = ContentValues()
-    var result = dataBase.query("diet_food", null, "food_name = ?", arrayOf(dietRecord.foodName), null, null, null)
+    var result = dataBase.query("diet_food", null, "food_name = ? and date = ?", arrayOf(dietRecord.foodName, dietRecord.date.toString()), null, null, null)
     var foodData = dataBase.query("food", null, "food_name = ?", arrayOf(dietRecord.foodName), null, null, null)
     foodData.moveToFirst()
     val food = Food(foodData.getString(1),foodData.getString(3),foodData.getInt(4),foodData.getInt(5),foodData.getInt(6), foodData.getInt(7), FOODTYPE.fromInt(foodData.getInt(2)))
 
     //如果饮食食品记录不存在则新增，否则更新数据
-    if (result.getCount() < 1){
+    if (result.getCount() == 0){
         contentValues.put("date", dietRecord.date)
         contentValues.put("quantity", dietRecord.quantity)
         contentValues.put("food_name", dietRecord.foodName)

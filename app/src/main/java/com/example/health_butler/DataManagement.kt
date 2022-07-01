@@ -189,12 +189,13 @@ fun insertDiet(dietRecord: DietRecord){
     if (result.getCount() < 1){
         contentValues.put("date", dietRecord.date)
         contentValues.put("quantity", dietRecord.quantity)
-        contentValues.put("foodName", dietRecord.foodName)
+        contentValues.put("food_name", dietRecord.foodName)
         contentValues.put("type", dietRecord.type.value)
         val state = dataBase.insert("diet_food", null, contentValues)
         val i = state
     }
     else{
+        result.moveToFirst()
         contentValues.put("quantity", result.getInt(4)+dietRecord.quantity)
         val state = dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(food.name, dietRecord.date.toString()))
         val i = state
@@ -202,7 +203,6 @@ fun insertDiet(dietRecord: DietRecord){
     result.close()
     contentValues.clear()
     result = dataBase.query("diet_record", null, "date = ?", arrayOf(dietRecord.date.toString()), null, null, null)
-
     //如果饮食记录不存在则新增，否则更新数据
     if (result.getCount() < 1){
         contentValues.put("date", dietRecord.date)
@@ -210,15 +210,16 @@ fun insertDiet(dietRecord: DietRecord){
         contentValues.put("carbohydrate", (food.carbohydrate * dietRecord.quantity).toInt())
         contentValues.put("protein", (food.protein * dietRecord.quantity).toInt())
         contentValues.put("fat", (food.fat * dietRecord.quantity).toInt())
-        val state = dataBase.insert("diet_food", null, contentValues)
+        val state = dataBase.insert("diet_record", null, contentValues)
         val i = state
     }
     else{
+        result.moveToFirst()
         contentValues.put("calorie", result.getInt(1) + food.calorie * dietRecord.quantity)
         contentValues.put("carbohydrate", result.getInt(2) + food.carbohydrate * dietRecord.quantity)
         contentValues.put("protein", result.getInt(3) + food.protein * dietRecord.quantity)
         contentValues.put("fat", result.getInt(4) + food.fat * dietRecord.quantity)
-        val state = dataBase.update("diet_food", contentValues, "food_name = ? and date = ?", arrayOf(dietRecord.foodName, dietRecord.date.toString()))
+        val state = dataBase.update("diet_record", contentValues, "date = ?", arrayOf(dietRecord.date.toString()))
         val i = state
     }
     result.close()

@@ -57,12 +57,6 @@ class IngestionActivity : Fragment(){
 
         initFragmentView()
 
-        Log.v("aaa","${foodList.size}")
-//        for(i in 0 until foodList.size) {
-//            Log.v("aaa", "${foodList.get(i).name}")
-//            Log.v("aaa", "${foodList.get(i).num}")
-//            Log.v("aaa", "${foodList.get(i).unit}")
-//        }
         adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)
         showFoodData.adapter = adapter
 
@@ -83,6 +77,9 @@ class IngestionActivity : Fragment(){
                     dateS = getDateFormat(dateI)
                 }
             }
+            foodList = queryDiet(dateI)
+            adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)
+            showFoodData.adapter = adapter
             tv_date.text = dateS
             childFragmentManager.setFragmentResult("changeIngestion", Bundle().apply {
                 putString("date", dateI.toString())
@@ -95,6 +92,9 @@ class IngestionActivity : Fragment(){
             if (i == 0) {
                 dateS = "今天"
             }
+            foodList = queryDiet(dateI)
+            adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)
+            showFoodData.adapter = adapter
             tv_date.text = dateS
             childFragmentManager.setFragmentResult("changeIngestion", Bundle().apply {
                 putString("date", dateI.toString())
@@ -161,6 +161,18 @@ class IngestionActivity : Fragment(){
                 view = convertView
                 viewHolder = view.tag as ViewHolder
             }
+
+            val foodsList = getItem(position)   // 获取当前项
+
+            if (foodsList != null) {
+                var foodName = foodsList.name
+                var quantity = foodsList.num
+                var unit = foodsList.unit
+                viewHolder.foodName.text = foodName   // 设置控件
+                viewHolder.quantity.text = quantity.toString()
+                viewHolder.unit.text = unit
+            }
+
             return view
         }
     }

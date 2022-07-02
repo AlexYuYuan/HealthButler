@@ -1,7 +1,9 @@
 package com.example.health_butler
 
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.ViewGroup
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 
 
 class NumberSelectDialog(context: Context, title: String, unit: String, dialogListener: FoodSelectActivity.DialogListener):Dialog(context){
@@ -31,6 +34,7 @@ class NumberSelectDialog(context: Context, title: String, unit: String, dialogLi
         val titleText = findViewById<TextView>(R.id.title)
         val notarizeButton = findViewById<Button>(R.id.notarizeButton)
         val editText = findViewById<EditText>(R.id.input)
+
 
         titleText.setText(title+ "(" + unit + ")")
 

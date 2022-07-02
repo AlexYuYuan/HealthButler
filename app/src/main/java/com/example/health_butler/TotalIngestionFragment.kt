@@ -26,7 +26,7 @@ class TotalIngestionFragment : Fragment() {
             val dietRecord = queryDietRecord(date!!.toInt())
             if (dietRecord != null) {
 
-                progr = (dietRecord.calorie.toDouble()/2500.0) * 100
+                progr = Math.floor(dietRecord.calorie.toDouble()/2500.0 * 100)
                 ingestion_progress_bar.progress = progr.toInt()
                 text_view_progress.text = "$progr%"
             } else {

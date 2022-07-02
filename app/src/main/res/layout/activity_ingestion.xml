@@ -111,7 +111,6 @@
             android:layout_width="330dp"
             android:layout_height="300dp"
             android:divider="@android:color/transparent"
-            android:stackFromBottom="true"
             android:dividerHeight="8dp"/>
 
     </LinearLayout>

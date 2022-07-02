@@ -101,7 +101,12 @@ class IngestionActivity : Fragment(){
             })
         }
 
-
+        childFragmentManager.setFragmentResultListener("getDate", this, FragmentResultListener { requestKey, result ->
+            //事件处理
+            childFragmentManager.setFragmentResult("changeIngestion", Bundle().apply {
+                putString("date", dateI.toString())
+            })
+        })
 
         addRecipes.setOnClickListener {
             val intent = Intent(activity, FoodSelectActivity::class.java)

@@ -80,6 +80,8 @@ class NutrientFragment : Fragment() {
 
         updateChart_view(getDate().toString())
 
+        parentFragmentManager.setFragmentResult("getDate", Bundle().apply {})
+
         parentFragmentManager.setFragmentResultListener("changeIngestion", this, FragmentResultListener { requestKey, result ->
             //事件处理
             val date = result.getString("date")

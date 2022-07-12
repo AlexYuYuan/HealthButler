@@ -32,6 +32,12 @@ class SportActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        for(i in 0 until sportList.size) {
+            Log.v("aaa", "${sportList.get(i).name}")
+            Log.v("aaa", "${sportList.get(i).time}")
+            Log.v("aaa", "${sportList.get(i).state}")
+        }
+
         adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)// listview适配器
         showSportData.adapter = adapter
 

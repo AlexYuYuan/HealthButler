@@ -66,7 +66,7 @@ class DataBaseHelper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("ALTER TABLE drink_records ADD COLUMN goal int not null default 2000")
+        db?.execSQL("delete from sport")
     }
 
 }
@@ -84,7 +84,7 @@ class MyApplication : Application() {
 
 //数据库对象以单例模式运行
 class SingleDataBase private constructor() {
-    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 3, null)
+    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 4, null)
     companion object {
         private var instance: SingleDataBase? = null
             get() {

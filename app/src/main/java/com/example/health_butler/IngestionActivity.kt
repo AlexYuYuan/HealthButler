@@ -54,14 +54,20 @@ class IngestionActivity : Fragment(){
     }
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         initFragmentView()
 
+        foodList = queryDiet(getDate())
         adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)
         showFoodData.adapter = adapter
 
         tv_date.text = "今天"
 
+        // 日期选择
         iv_calendar_next.setOnClickListener {
             if (i == 0) {
                 dateS = "今天"
@@ -112,35 +118,16 @@ class IngestionActivity : Fragment(){
             val intent = Intent(activity, FoodSelectActivity::class.java)
             startActivity(intent)
         }
-
-
-//        progr = 70
-
-
-//        resetFragment()
-//        updateProgressBar()
-//        updateChartView()
-
-//        go_nutrient.setOnClickListener{
-//            val transaction = getChildFragmentManager().beginTransaction()
-//            transaction.replace(R.id.statistics_layout, NutrientFragment())
-//            transaction.commit()
-//        }
-//        go_ingestion.setOnClickListener{
-//            val transaction = getChildFragmentManager().beginTransaction()
-//            transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
-//            transaction.commit()
-//            Log.v("aaa", "sucess")
-//        }
-
-
     }
+
+    // 切换fragment板块
     fun initFragmentView() {
         val transaction = getChildFragmentManager().beginTransaction()
         transaction.replace(R.id.statistics_layout, TotalIngestionFragment())
         transaction.commit()
     }
 
+    // 自定义适配器
     inner class MyFoodAdapter(val activity: Context, val resourceID: Int, data: List<DietShow>) : ArrayAdapter<DietShow>(activity, resourceID, data) {
 
         inner class ViewHolder(val foodName: TextView, val quantity : TextView, val unit: TextView)

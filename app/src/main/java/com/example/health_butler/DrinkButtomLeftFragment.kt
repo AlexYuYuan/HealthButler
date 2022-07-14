@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -33,6 +34,20 @@ class DrinkButtomLeftFragment() : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        targetDrinking = getWaterGoal()
+        total_drinking.text = targetDrinking.toString() + " ml"
+
+        var res = queryDrinkRecords(getDate())
+
+        if (res == null) {
+            current_drinking.text = currentDrinking.toString()
+        }
+        else {
+            current_drinking.text = res.volume.toString()
+            currentDrinking = res.volume
+        }
+        updateProgress()
+
         parentFragmentManager.setFragmentResultListener("changeDate", this, FragmentResultListener { requestKey, result ->
             //事件处理
             val date = result.getString("date")
@@ -43,21 +58,17 @@ class DrinkButtomLeftFragment() : Fragment() {
                 current_drinking.text = currentDrinking.toString()
                 updateProgress()
             }
+            else {
+                currentDrinking = 0
+                current_drinking.text = currentDrinking.toString()
+                updateProgress()
+            }
+            if (date.toInt() == getDate()) {
+                add.isVisible = true
+            }else {
+                add.isVisible = false
+            }
         })
-
-        targetDrinking = getWaterGoal()
-        total_drinking.text = targetDrinking.toString() + " ml"
-        var res = queryDrinkRecords(getDate())
-
-        if (res == null) {
-            current_drinking.text = currentDrinking.toString()
-        }
-        else {
-            current_drinking.text = res.volume.toString()
-            currentDrinking = res.volume
-        }
-
-        updateProgress()
 
         drinking_target.setOnClickListener {
             showDialog(0)

@@ -14,6 +14,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentResultListener
 import com.github.mikephil.charting.data.Entry
@@ -71,16 +72,19 @@ class IngestionActivity : Fragment(){
         iv_calendar_next.setOnClickListener {
             if (i == 0) {
                 dateS = "今天"
+                addRecipes.isVisible = true
             }
             else{
                 i++
                 if(i == 0) {
                     dateS = "今天"
                     dateI = getDate() + i * 86400
+                    addRecipes.isVisible = true
                 }
                 else {
                     dateI = getDate() + i * 86400
                     dateS = getDateFormat(dateI)
+                    addRecipes.isVisible = false
                 }
             }
             foodList = queryDiet(dateI)
@@ -97,6 +101,10 @@ class IngestionActivity : Fragment(){
             dateS = getDateFormat(dateI)
             if (i == 0) {
                 dateS = "今天"
+                addRecipes.isVisible = true
+            }
+            if (i != 0) {
+                addRecipes.isVisible = false
             }
             foodList = queryDiet(dateI)
             adapter = MyFoodAdapter(this.requireContext(), R.layout.menu_item, foodList)

@@ -47,7 +47,8 @@ class DataBaseHelper(
         db?.execSQL("create table sport_record(record_id INTEGER PRIMARY KEY autoincrement," +
                 "date int," +
                 "sport_name varchar(40), " +
-                "time int not null default 0)")
+                "time int not null default 0, "+
+                "state int not null default 0)")
 
         db?.execSQL("create table weight(date int primary key," +
                 "weight double not null default 0, " +
@@ -59,7 +60,9 @@ class DataBaseHelper(
                 "hip double not null default 0)")
 
         db?.execSQL("create table drink_records(date int primary key," +
-                "volume int not null default 0)")
+                "volume int not null default 0, "+
+                "goal int not null default 2000, " +
+                "state boolean not null default 0)")
 
         db?.execSQL("create table clock(time String primary key," +
                 "state boolean not null default 0)")
@@ -329,9 +332,9 @@ fun querySport(): LinkedList<SportShow>{
             if(record.getInt(4) == 0) {
                 sportList.add(SportShow(result.getString(0), result.getInt(1), false))
             }
-            else
-                Log.v("aaa","ccc")
+            else {
                 sportList.add(SportShow(result.getString(0), result.getInt(1), true))
+            }
         }
         //否则为完成
         result.moveToNext()

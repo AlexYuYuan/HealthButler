@@ -69,7 +69,7 @@ class DataBaseHelper(
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        db?.execSQL("delete from sport")
+        db?.execSQL("delete from sport_record")
     }
 
 }
@@ -87,7 +87,7 @@ class MyApplication : Application() {
 
 //数据库对象以单例模式运行
 class SingleDataBase private constructor() {
-    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 4, null)
+    val dateBaseHelper: DataBaseHelper = DataBaseHelper(MyApplication.context, "healthButler", null, 7, null)
     companion object {
         private var instance: SingleDataBase? = null
             get() {
@@ -324,7 +324,7 @@ fun querySport(): LinkedList<SportShow>{
         //如果运动记录不存在，运动状态为未完成且新增记录
         if(record.count == 0) {
             sportList.add(SportShow(result.getString(0), result.getInt(1), false))
-            insertSportRecord(SportRecord(getDate(), result.getString(0), 0, false))
+            insertSportRecord(SportRecord(getDate(), result.getString(0), result.getInt(1), false))
         }
         //如果运动记录时间为0则运动状态为未完成
         else{

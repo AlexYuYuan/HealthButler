@@ -12,10 +12,6 @@ import kotlinx.android.synthetic.main.fragment_drink_top.*
 
 class DrinkActivity : Fragment() {
 
-//    var i : Int = 0
-//    var dateI : Int = getDate() + i * 86400
-//    var dateS : String = getDateFormat(dateI)
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,24 +26,6 @@ class DrinkActivity : Fragment() {
 
         tv_date.text = "今天"
 
-//        iv_calendar_next.setOnClickListener {
-//            i++
-//            dateI = getDate() + i * 86400
-//            dateS = getDateFormat(dateI)
-//            if (i == 0) {
-//                dateS = "今天"
-//            }
-//            tv_date.text = dateS
-//        }
-//        iv_calendar_previous.setOnClickListener {
-//            i--
-//            dateI = getDate() + i * 86400
-//            dateS = getDateFormat(dateI)
-//            if (i == 0) {
-//                dateS = "今天"
-//            }
-//            tv_date.text = dateS
-//        }
 
         drinkWater.setOnClickListener {
             val transaction = getChildFragmentManager().beginTransaction()

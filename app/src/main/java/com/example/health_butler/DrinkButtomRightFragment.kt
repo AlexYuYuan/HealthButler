@@ -18,7 +18,6 @@ import kotlin.collections.ArrayList
 
 class DrinkButtomRightFragment : Fragment() {
 
-    private val times = ArrayList<Time>()
     private val clockList : LinkedList<AlarmClock> = queryClock()
 
     override fun onCreateView(
@@ -35,28 +34,6 @@ class DrinkButtomRightFragment : Fragment() {
 
         val adapter = MyListAdapter(this.requireContext(), R.layout.time_item, clockList)   // listview适配器
         showData.adapter = adapter
-
-
-//        showData.setOnItemClickListener { adapterView, view, i, l ->
-//            val alertDialog = AlertDialog.Builder(this.requireContext()).create()
-//            alertDialog.setMessage("您确定删除此条信息吗？")
-//
-//            alertDialog.setButton(
-//                DialogInterface.BUTTON_NEGATIVE, "否"
-//            ) { dialog, which ->
-//            }
-//
-//            //将对应位置的数据删除
-//            alertDialog.setButton(
-//                DialogInterface.BUTTON_POSITIVE, "是"
-//            ) { dialog, which ->
-//                                 // 删除数据库条目
-//                allData.removeAt(i)   // 删除缓存数据
-//                adapter.notifyDataSetChanged()   // 刷新视图
-//                true
-//            }
-//            alertDialog.show()
-//        }
 
 
         // 添加闹钟，弹出对话框
@@ -133,16 +110,6 @@ class DrinkButtomRightFragment : Fragment() {
                     }
                 }
             }
-
-
-//            val showData : ListView = view.findViewById(R.id.showData)
-//
-//            showData.setOnItemClickListener { adapterView, view, i, l ->
-////                times.removeAt(i)   // 删除缓存数据
-////                adapter.notifyDataSetChanged()   // 刷新视图
-////                this.notifyDataSetChanged()
-//                Log.v("ccc","ddd")
-//            }
 
             return view
         }

@@ -53,7 +53,6 @@ class DrinkButtomLeftFragment() : Fragment() {
             val date = result.getString("date")
             val drinkRecord = queryDrinkRecords(date!!.toInt())
             if(drinkRecord != null){
-                targetDrinking = drinkRecord.goal
                 currentDrinking = drinkRecord.volume
                 current_drinking.text = currentDrinking.toString()
                 updateProgress()
@@ -63,6 +62,7 @@ class DrinkButtomLeftFragment() : Fragment() {
                 current_drinking.text = currentDrinking.toString()
                 updateProgress()
             }
+            // 根据日期决定添加喝水按钮是否可见
             if (date.toInt() == getDate()) {
                 add.isVisible = true
             }else {
@@ -86,6 +86,7 @@ class DrinkButtomLeftFragment() : Fragment() {
         drink_progress_bar.progress = progr
     }
 
+    // 更新饮水的对话框
     fun showDialog(num : Int) {
         val btnsheet = layoutInflater.inflate(R.layout.buttom_setdrinking_dialog, null)
         val dialog = BottomSheetDialog(this.requireContext())
@@ -96,14 +97,16 @@ class DrinkButtomLeftFragment() : Fragment() {
 
         idBtnDismiss?.setOnClickListener {
             if (num == 0) {
+                // 更新饮水目标
                 targetDrinking = setDrinking?.text.toString().toInt()
-                setWaterGoal(targetDrinking)
+                setWaterGoal(targetDrinking)   // 更新本地存储
                 total_drinking.text = targetDrinking.toString() + " ml"
             }
             else if (num == 1) {
+                // 添加饮水
                 val tem = setDrinking?.text.toString().toInt()
                 currentDrinking = currentDrinking + tem
-                upDataDrinkRecord(tem)
+                upDataDrinkRecord(tem)   // 更新数据库
                 current_drinking.text = (currentDrinking).toString()
             }
             updateProgress()

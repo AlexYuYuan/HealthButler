@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_sport.*
 import java.util.*
@@ -16,7 +17,6 @@ class SportActivity : Fragment() {
     var dateI : Int = getDate() + i * 86400
     var dateS : String = getDateFormat(dateI)
 
-//    private val sports = ArrayList<Sports>()
     private var sportList : LinkedList<SportShow> = querySport()
     var adapter : MyListAdapter? = null
 
@@ -32,17 +32,12 @@ class SportActivity : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        for(i in 0 until sportList.size) {
-            Log.v("aaa", "${sportList.get(i).name}")
-            Log.v("aaa", "${sportList.get(i).time}")
-            Log.v("aaa", "${sportList.get(i).state}")
-        }
-
         adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)// listview适配器
         showSportData.adapter = adapter
 
         tv_date.text = "今天"
 
+        // 日期选择
         iv_calendar_next.setOnClickListener {
             i++
             dateI = getDate() + i * 86400
@@ -51,9 +46,11 @@ class SportActivity : Fragment() {
             if (i == 0) {
                 dateS = "今天"
                 sportList = querySport()
+                addSport.isVisible = true
             }
             if (i != 0) {
                 sportList = querySportRecordByDate(dateI)
+                addSport.isVisible = false
             }
             updateProgress()
             adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
@@ -68,9 +65,11 @@ class SportActivity : Fragment() {
             if (i == 0) {
                 dateS = "今天"
                 sportList = querySport()
+                addSport.isVisible = true
             }
             if (i != 0) {
                 sportList = querySportRecordByDate(dateI)
+                addSport.isVisible = false
             }
             updateProgress()
             adapter = MyListAdapter(this.requireContext(), R.layout.sport_item, sportList)  // listview适配器
@@ -87,6 +86,7 @@ class SportActivity : Fragment() {
 
     }
 
+    // 更新进度条
     private fun updateProgress() {
         var target : Int = 0
         var current : Int = 0
@@ -102,12 +102,7 @@ class SportActivity : Fragment() {
         sport_progress_bar.progress = progr
     }
 
-    // 测试例子
-//    private fun initSports() {
-//        sports.add(Sports("跑步", 30, false))
-//        sports.add(Sports("跳绳", 20, true))
-//    }
-
+    // 添加运动项目对话框
     private fun showDialog() {
         val sheet = layoutInflater.inflate(R.layout.setsport_dialog, null)
         val dialog = Dialog(this.requireContext())
@@ -115,12 +110,13 @@ class SportActivity : Fragment() {
         dialog.setContentView(sheet)
 
         window?.setGravity(Gravity.CENTER)
-        window?.setLayout(900, ViewGroup.LayoutParams.WRAP_CONTENT)
+        window?.setLayout(900, ViewGroup.LayoutParams.WRAP_CONTENT)   // 设置对话框大小
 
         val SportName : EditText = dialog.findViewById<EditText>(R.id.SportName)
         val SportTime : EditText = dialog.findViewById<EditText>(R.id.SportTime)
         val add : Button = dialog.findViewById<Button>(R.id.add)
 
+        // 添加按钮监听
         add.setOnClickListener {
             var name : String = ""
             var time : Int = 0
@@ -134,14 +130,17 @@ class SportActivity : Fragment() {
                 time = SportTime.text.toString().toInt()
                 isComplete = false
 
-                var flag : Int = insertSport(Sport(name, time))//更新数据库
+                var flag : Int = insertSport(Sport(name, time))  //更新数据库
+                // 是否成功更新
                 if (flag == 1) {
+                    // 更新成功
                     Toast.makeText(context, "Successfully added", Toast.LENGTH_LONG).show()
                     sportList.add(SportShow(name, time, isComplete))
                     adapter?.notifyDataSetChanged()
-                    updateProgress()
+                    updateProgress()   // 更新进度条
                 }
                 else if (flag == 0) {
+                    // 更新失败
                     Toast.makeText(context, "This sport already exists", Toast.LENGTH_LONG).show()
                 }
                 dialog.dismiss()
@@ -150,6 +149,7 @@ class SportActivity : Fragment() {
         dialog.show()
     }
 
+    // 适配器
      inner class MyListAdapter(val activity: Context, val resourceID: Int, data: List<SportShow>) : ArrayAdapter<SportShow>(activity, resourceID, data) {
 
         inner class ViewHolder(val sportName: TextView, val sportTime : TextView, val isComplete: CheckBox)

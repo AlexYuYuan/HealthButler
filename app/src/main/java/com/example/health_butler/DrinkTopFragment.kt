@@ -32,6 +32,7 @@ class DrinkTopFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        // 日期选择
         iv_calendar_previous.setOnClickListener {
             i--
             dateI = getDate() + i * 86400
@@ -40,6 +41,7 @@ class DrinkTopFragment : Fragment() {
                 dateS = "今天"
             }
             tv_date.text = dateS
+            // 事件处理
             parentFragmentManager.setFragmentResult("changeDate", Bundle().apply {
                 putString("date", dateI.toString())
             })
@@ -64,31 +66,5 @@ class DrinkTopFragment : Fragment() {
                 putString("date", dateI.toString())
             })
         }
-//        super.onActivityCreated(savedInstanceState)
-//
-//        tv_date.text = params1[i]
-//
-//        iv_calendar_next.setOnClickListener {
-//            if (i < params1.size - 1) {
-//                i++
-//            }
-//            tv_date.text = params1[i]
-//        }
-//        iv_calendar_previous.setOnClickListener {
-//            if (i > 0) {
-//                i--
-//            }
-//            tv_date.text = params1[i]
-//        }
-//
-//        val transaction = getFragmentManager()?.beginTransaction()
-//        drinkWater.setOnClickListener {
-//            transaction?.replace(R.id.buttom_layout, DrinkButtomLeftFragment())
-//            transaction?.commit()
-//        }
-//        remind.setOnClickListener {
-//            transaction?.replace(R.id.buttom_layout, DrinkButtomRightFragment())
-//            transaction?.commit()
-//        }
     }
 }
